@@ -117,17 +117,21 @@ void displayGraph() {
   for (int i = 0; i < maxValues; i++) {
     float x = map(i, 0, maxValues - 1, 0, width);
     float y = map(heartRateValues[i], 45, 220, height,0);
-      //if(y> && y< ){
-      //}
-      //else if(y<){
-      //}
-      //else if(y<){
-      //}
-      //else if(y<){
-      //}
-      //else{
-      //  stroke(#808080);
-      //}
+      if(y<=maxHeartRate&&y>=maxHeartRate*.9){
+        stroke(#FF0000);
+      }
+      else if(y<maxHeartRate*.9&&y>=maxHeartRate*.8){
+        stroke(#FFAE42);
+      }
+      else if(y<maxHeartRate*.8&&y>=maxHeartRate*.7){
+        stroke(#008000);
+      }
+      else if(y<maxHeartRate*.7&&y>=maxHeartRate*.6){
+        stroke(#0000FF);
+      }
+      else{
+        stroke(#FFFFFF);
+      }
     vertex(x, y);
     if(i%30==0){
       calculateHeartRate();
