@@ -40,13 +40,30 @@ void setup(){
   delay(4000); 
 
 }
+void beepBuzzer(){
+  tone(12, 1000);
+  delay(20);
+  noTone(12);
+  delay(60);
+  tone(12, 1000);
+  delay(20);
+  noTone(12);
+}
 
 void loop(){
 
     // Information from the readBpm function will be saved to our "body"
     // variable.  
     body = bioHub.readBpm();
-    Serial.println(body.heartRate); 
-    delay(250); // Slowing it down, we don't need to break our necks here.
+    Serial.println(body.heartRate);
+
+    read = Serial.readStringUntil('\n');
+    if(read == "1"){
+      beepBuzzer();
+      delay(900); 
+    }
+    else{
+      delay(1000); 
+    }
 }
 
