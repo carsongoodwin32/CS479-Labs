@@ -1,5 +1,6 @@
 import processing.serial.*;
 
+
 Serial myPort;      // The serial port
 PFont myFont;       // The display font
 String inString;    // Input string from serial port
@@ -61,6 +62,9 @@ void keyPressed() {
     // Enter Relaxed v Stressed Mode
     relaxedMode = true;
     fitnessMode = false;
+  }
+  else if (key == '3'){
+    myPort.write("1");
   }
 }
 
@@ -141,6 +145,7 @@ void displayGraph() {
     if (heartrate < maxHeartRate*0.5)
     {
       stroke(#FFFFFF); // White
+      //myPort.write("1");
     }
     vertex(x, y);
     if(i%30==0){
