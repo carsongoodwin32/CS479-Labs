@@ -8,6 +8,7 @@
 // Reset pin, MFIO pin
 const int resPin = 4;
 const int mfioPin = 5;
+String read = "";
 
 SparkFun_Bio_Sensor_Hub bioHub(resPin, mfioPin); 
 
@@ -42,28 +43,25 @@ void setup(){
 }
 void beepBuzzer(){
   tone(12, 1000);
-  delay(20);
+  delay(50);
   noTone(12);
   delay(60);
   tone(12, 1000);
-  delay(20);
+  delay(50);
   noTone(12);
 }
 
-void loop(){
+void loop() {
+  // Read the incoming data from Serial
+  read = Serial.readStringUntil('\n');
 
-    // Information from the readBpm function will be saved to our "body"
-    // variable.  
+  if (read == "1") {
+    beepBuzzer();
+  } else {
+    // Run other code when not receiving '1'
     body = bioHub.readBpm();
     Serial.println(body.heartRate);
-
-    read = Serial.readStringUntil('\n');
-    if(read == "1"){
-      beepBuzzer();
-      delay(900); 
-    }
-    else{
-      delay(1000); 
-    }
+  }
 }
+
 
