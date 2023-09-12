@@ -11,8 +11,8 @@ int maxValues = 300;   // Maximum number of values for 30 seconds (30 * 30 = 900
 int avgheartRate = 0;     // Global variable to store heart rate
 int startTime = 0;     // Start time for monitoring
 int heartrate = 0;
-float age = 22;
-float maxHeartRate = 220-age;
+int age = 22;
+int maxHeartRate = 220-age;
 
 int zone1sec = 0;
 int zone2sec = 0;
@@ -112,26 +112,29 @@ void displayGraph() {
 
   // Draw the line graph within the margin
   stroke(255);// change stroke depending on 
+  strokeWeight(4);  // Thicker
   noFill();
   beginShape();
   for (int i = 0; i < maxValues; i++) {
     float x = map(i, 0, maxValues - 1, 0, width);
-    float y = map(heartRateValues[i], 45, 220, height,0);
-      if(y<=maxHeartRate&&y>=maxHeartRate*.9){
-        stroke(#FF0000);
-      }
-      else if(y<maxHeartRate*.9&&y>=maxHeartRate*.8){
-        stroke(#FFAE42);
-      }
-      else if(y<maxHeartRate*.8&&y>=maxHeartRate*.7){
-        stroke(#008000);
-      }
-      else if(y<maxHeartRate*.7&&y>=maxHeartRate*.6){
-        stroke(#0000FF);
-      }
-      else{
-        stroke(#FFFFFF);
-      }
+    float y = map(heartRateValues[i], 45, 222, 400,height/10);
+    if (heartrate >= maxHeartRate * 0.9) {
+      stroke(#FF0000); // Red
+    }
+    if (heartrate < maxHeartRate * 0.9 && heartrate >= maxHeartRate * 0.8) {
+      stroke(#FFAE42); // Orange
+    }
+    if (heartrate < maxHeartRate * 0.8 && heartrate >= maxHeartRate * 0.7) {
+      stroke(#008000); // Green
+    }
+    if (heartrate < maxHeartRate * 0.7 && heartrate >= maxHeartRate * 0.6) {
+      stroke(#0000FF); // Blue
+    }
+    if (heartrate < maxHeartRate*0.6)
+    {
+      stroke(#FFFFFF); // White
+    }
+
     vertex(x, y);
     if(i%30==0){
       calculateHeartRate();
