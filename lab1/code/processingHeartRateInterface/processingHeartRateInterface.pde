@@ -117,29 +117,34 @@ void displayGraph() {
   beginShape();
   for (int i = 0; i < maxValues; i++) {
     float x = map(i, 0, maxValues - 1, 0, width);
-    float y = map(heartRateValues[i], 45, 222, 400,height/10);
+    float y = map(heartRateValues[i], 45, 222, 400,height/4);
     if (heartrate >= maxHeartRate * 0.9) {
       stroke(#FF0000); // Red
+      zone5sec+=1;
     }
     if (heartrate < maxHeartRate * 0.9 && heartrate >= maxHeartRate * 0.8) {
       stroke(#FFAE42); // Orange
+      zone4sec+=1;
     }
     if (heartrate < maxHeartRate * 0.8 && heartrate >= maxHeartRate * 0.7) {
       stroke(#008000); // Green
+      zone3sec+=1;
     }
     if (heartrate < maxHeartRate * 0.7 && heartrate >= maxHeartRate * 0.6) {
       stroke(#0000FF); // Blue
+      zone2sec+=1;
     }
-    if (heartrate < maxHeartRate*0.6)
+    if (heartrate < maxHeartRate * 0.6 && heartrate >= maxHeartRate * 0.5) {
+      stroke(#ABB0B8); // Grey
+      zone1sec+=1;
+    }
+    if (heartrate < maxHeartRate*0.5)
     {
       stroke(#FFFFFF); // White
     }
-
     vertex(x, y);
     if(i%30==0){
       calculateHeartRate();
-      //update time in all zones
-      //calculateTimeInZones();
     }
   }
   endShape();
@@ -148,4 +153,10 @@ void displayGraph() {
   fill(255);
   text("Instant Heart Rate: " + heartrate, 10,  30);
   text("Average Heart Rate: " + avgheartRate, 10,  40);
+  
+  text("Num Sec in 90-100% Max Heart Rate: " + zone5sec/20000, 550,  10);
+  text("Num Sec in 80-90% Max Heart Rate: " + zone4sec/20000, 550,  20);
+  text("Num Sec in 70-80% Max Heart Rate: " + zone3sec/20000, 550,  30);
+  text("Num Sec in 60-70% Max Heart Rate: " + zone2sec/20000, 550,  40);
+  text("Num Sec in 50-60% Max Heart Rate: " + zone1sec/20000, 550,  50);
 }
