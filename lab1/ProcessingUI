@@ -1,1 +1,296 @@
+import processing.serial.*;
+import javax.swing.JOptionPane;
 
+Serial myPort;
+PFont myFont;
+String inString;
+int lf = 10;
+boolean fitnessMode = false;
+boolean relaxedMode = false;
+int[] heartRateValues;
+int maxValues = 300;
+int avgheartRate = 0;
+int startTime = 0;
+int heartrate = 0;
+int age = 22;
+int maxHeartRate = 220 - age;
+int zone5sec = 0;
+int zone4sec = 0;
+int zone3sec = 0;
+int zone2sec = 0;
+int zone1sec = 0;
+float spo2 = 0;
+float confidence = 0;
+String mood = "Meditative";
+
+void setup() {
+  size(800, 400);
+  printArray(Serial.list());
+  heartRateValues = new int[maxValues];
+  for (int i = 0; i < maxValues; i++) {
+    heartRateValues[i] = 0;
+  }
+  myPort = new Serial(this, Serial.list()[0], 115200);
+  myPort.bufferUntil(lf);
+
+  // Prompt for user's age and validate the input
+  int age = -1;  
+  while (age < 0 || age > 120) {
+    String ageInput = prompt("Please enter your age:");
+    try {
+        age = Integer.parseInt(ageInput);
+        if (age < 0 || age > 120) {
+            prompt("Invalid input. Age should be between 0 and 120.");
+        }
+    } catch (NumberFormatException e) {
+        // Handle the exception, which in this case means looping again to get valid input
+        prompt("Invalid input. Please enter a numeric value for age.");
+    }
+  }
+
+  // Recalculate the max heart rate based on the provided age
+  maxHeartRate = 220 - age;
+
+  // Prompt and validate user's gender
+  String gender = prompt("Please enter your gender (M/F/O):");
+  while (!(gender.equalsIgnoreCase("M") || gender.equalsIgnoreCase("F") || gender.equalsIgnoreCase("O"))) {
+    gender = prompt("Invalid input. Please enter your gender (M/F/O):");
+  }
+}
+
+void draw() {
+  background(0);
+  if (!fitnessMode && !relaxedMode) {
+    fill(255);
+    text("Press '1' for Fitness Mode", 50, 100);
+    text("Press '2' for Relaxed v Stressed Mode", 50, 150);
+  } else if (fitnessMode || relaxedMode) { 
+    fill(255);
+    displayGraph();
+    if (relaxedMode) {
+      text("Relaxed v Stressed Mode", 75, 50);
+    }
+  }
+}
+
+void keyPressed() {
+  if (key == '1') {
+    fitnessMode = true;
+    relaxedMode = false;
+    startTime = millis();
+    clearHeartRateValues();
+  } else if (key == '2') {
+    relaxedMode = true;
+    fitnessMode = false;
+  } else if (key == '3') {
+    myPort.write("1");
+  }
+}
+
+void serialEvent(Serial p) {
+  inString = p.readString();
+  String[] parts = split(trim(inString), ',');
+  if (parts.length >= 3) {
+    int newValue = int(float(parts[0]));
+    spo2 = float(parts[1]);
+    confidence = float(parts[2]);
+    if (fitnessMode && newValue > 0) {
+      addHeartRateValue(newValue);
+      heartrate = newValue;
+    }
+  }
+}
+
+void clearHeartRateValues() {
+  for (int i = 0; i < maxValues; i++) {
+    heartRateValues[i] = 0;
+  }
+}
+
+void calculateHeartRate() {
+  int sum = 0;
+  int count = 0;
+  for (int i = 270; i < maxValues; i++) {
+    if (heartRateValues[i] > 0) {
+      sum += heartRateValues[i];
+      count++;
+    }
+  }
+  if (count > 0) {
+    avgheartRate = round(float(sum) / count);
+  } else {
+    avgheartRate = 0;
+  }
+}
+
+void addHeartRateValue(int value) {
+  for (int i = 0; i < maxValues - 1; i++) {
+    heartRateValues[i] = heartRateValues[i + 1];
+  }
+  heartRateValues[maxValues - 1] = value;
+}
+
+void displayGraph() {
+   background(0);
+
+  int leftMargin = (int) (width * 0.1);  
+  // 10% margin from the left
+  int rightMargin = (int) (width * 0.9);  
+  // 90% of the width (or 10% margin from the right)
+  int topMargin = (int) (height * 0.1);  
+  // 10% margin from the top
+
+  stroke(255);
+  strokeWeight(4);
+  noFill();
+  beginShape();
+  
+  for (int i = 0; i < maxValues; i++) {
+    float x = map(i, 0, maxValues - 1, leftMargin, rightMargin);
+    float y = map(heartRateValues[i], 45, 222, height - topMargin, height / 2);
+    
+    if (heartrate >= maxHeartRate * 0.9) {
+      stroke(color(255, 0, 0));
+      zone5sec++;
+    } else if (heartrate < maxHeartRate * 0.9 && heartrate >= maxHeartRate * 0.8) {
+      stroke(color(255, 174, 66));
+      zone4sec++;
+    } else if (heartrate < maxHeartRate * 0.8 && heartrate >= maxHeartRate * 0.7) {
+      stroke(color(0, 128, 0));
+      zone3sec++;
+    } else if (heartrate < maxHeartRate * 0.7 && heartrate >= maxHeartRate * 0.6) {
+      stroke(color(0, 0, 255));
+      zone2sec++;
+    } else if (heartrate < maxHeartRate * 0.6 && heartrate >= maxHeartRate * 0.5) {
+      stroke(color(171, 176, 184));
+      zone1sec++;
+    } else {
+      stroke(color(255, 255, 255));
+    }
+
+    vertex(x, y);
+    
+    if (i % 30 == 0) {
+      calculateHeartRate();
+    }
+  }
+  endShape();
+
+  fill(255);
+  text("Instant Heart Rate: " + heartrate, leftMargin, topMargin + 30);
+  text("Average Heart Rate: " + avgheartRate, leftMargin, topMargin + 50);
+  text("SpO2: " + spo2 + "%", leftMargin, topMargin + 90);
+  text("Confidence Level: " + confidence + "%", leftMargin, topMargin + 110);
+
+  // Age-adjusted max heart rate display
+  text("Age-Adjusted Max Heart Rate: " + maxHeartRate, leftMargin, topMargin + 70);
+
+  // Color-coded zones below the graph
+  float yPos = height * 0.85f;  
+  // start 85% down the height of the screen, giving more room for horizontal layout
+  String[] zoneLabels = {
+    "90-100% Max", "80-90% Max", "70-80% Max", 
+    "60-70% Max", "50-60% Max", "<50% Max"
+  };
+  int[] zoneColors = {
+    color(255, 0, 0), color(255, 174, 66), color(0, 128, 0), 
+    color(0, 0, 255), color(171, 176, 184), color(255, 255, 255)
+  };
+
+  float zoneWidth = (rightMargin - leftMargin) / zoneLabels.length;
+  float xPos = leftMargin;
+  for (int i = 0; i < zoneLabels.length; i++) {
+    fill(zoneColors[i]);
+    rect(xPos, yPos, zoneWidth, 15); 
+    // colored rectangle
+    fill(255); 
+    // white color for text
+    text(zoneLabels[i], xPos + zoneWidth / 2, yPos + 12); 
+    // centering the text within the rectangle
+    xPos += zoneWidth;
+  }
+  
+// Additional information in relaxed mode
+if (relaxedMode) {
+    if (avgheartRate > maxHeartRate * 0.85) {
+      fill(color(255, 0, 0)); 
+      // Red color for warning
+      text("WARNING: Your heart rate is unusually high for a relaxed state.", leftMargin, topMargin + 140);
+      text("Consider seeking medical advice.", leftMargin, topMargin + 155);
+    } else if (avgheartRate > maxHeartRate * 0.75) {
+      fill(color(255, 174, 66)); 
+      // Orange color for caution
+      text("CAUTION: Your heart rate is slightly elevated.", leftMargin, topMargin + 140); 
+    }
+
+    // Check for Bradycardia and Tachycardia while in relaxedMode
+    if (heartrate < 40) {
+      fill(color(255, 0, 0)); 
+      // Red color for bradycardia warning
+      text("WARNING: Your heart rate indicates Bradycardia.", leftMargin, topMargin + 175);
+      text("Consider seeking medical advice.", leftMargin, topMargin + 190);
+    } else if (heartrate > 100) {
+      fill(color(255, 0, 0)); 
+      // Red color for tachycardia warning
+      if (mood.equals("stressed")) {
+        text("WARNING: Your heart rate indicates Tachycardia in a stressed state.", leftMargin, topMargin + 175);
+      } else {
+        text("WARNING: Your heart rate indicates Tachycardia.", leftMargin, topMargin + 175);
+      }
+      text("Consider seeking medical advice.", leftMargin, topMargin + 190);
+      }
+      if (relaxedMode) {
+         text("Mood: " + mood, leftMargin, topMargin + 130);
+      }
+}
+}
+
+void displayMedicalWarnings() {
+  int leftMargin = (int) (width * 0.1);
+  int topMargin = (int) (height * 0.1);
+
+  if (avgheartRate > maxHeartRate * 0.85) {
+    fill(color(255, 0, 0));
+    text("WARNING: Your heart rate is unusually high for a relaxed state.", leftMargin, topMargin + 140);
+    text("Consider seeking medical advice.", leftMargin, topMargin + 155);
+  } else if (avgheartRate > maxHeartRate * 0.75) {
+    fill(color(255, 174, 66));
+    text("CAUTION: Your heart rate is slightly elevated.", leftMargin, topMargin + 140);
+  }
+
+  if (mood.equals("stressed") && heartrate > 100) {
+    fill(color(255, 0, 0));
+    text("WARNING: Your heart rate indicates Tachycardia in a stressed state.", leftMargin, topMargin + 175);
+    text("Consider seeking medical advice.", leftMargin, topMargin + 190);
+  }
+
+  if (heartrate < 40) {
+    fill(color(255, 0, 0));
+    text("WARNING: Your heart rate indicates Bradycardia.", leftMargin, topMargin + 175);
+    text("Consider seeking medical advice.", leftMargin, topMargin + 190);
+  } else if (heartrate > 100) {
+    fill(color(255, 0, 0));
+    text("WARNING: Your heart rate indicates Tachycardia.", leftMargin, topMargin + 175);
+    text("Consider seeking medical advice.", leftMargin, topMargin + 190);
+  }
+}
+
+void setStrokeColorBasedOnHeartRate(int heartRate, int maxHeartRate) {
+  float hrPercentage = float(heartRate) / maxHeartRate;
+  if (hrPercentage >= 0.9) {
+    stroke(color(255, 0, 0)); 
+    // Red
+  } else if (hrPercentage >= 0.8) {
+    stroke(color(255, 174, 66)); 
+    // Orange
+  } else if (hrPercentage >= 0.7) {
+    stroke(color(0, 128, 0)); 
+    // Green
+  } else {
+    stroke(255); 
+    // Default white
+  }
+}
+String prompt(String question) {
+  return JOptionPane.showInputDialog(null, question);
+}
