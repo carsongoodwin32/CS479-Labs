@@ -78,7 +78,7 @@ void keyPressed() {
     relaxedMode = true;
     fitnessMode = false;
   } else if (key == '3') {
-    myPort.write("1");
+    myPort.write("3");
   }
 }
 void serialEvent(Serial p) {
@@ -88,6 +88,9 @@ void serialEvent(Serial p) {
     int newValue = int(float(parts[0]));
     spo2 = float(parts[1]);
     confidence = float(parts[2]);
+    println("Received Heart Rate: " + newValue);
+    println("Received SpO2: " + spo2); 
+    println("Received Confidence: " + confidence);
     
  // Update 5-minute buffer
     fiveMinuteBuffer[bufferIndex] = newValue;
