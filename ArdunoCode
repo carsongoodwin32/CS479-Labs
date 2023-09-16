@@ -5,19 +5,30 @@
 const int resPin = 4;
 const int mfioPin = 5;
 
+const int buzzerPin = 3; 
+
 SparkFun_Bio_Sensor_Hub bioHub(resPin, mfioPin);
 bioData body;
+
+enum Mode {
+  NONE,
+  RELAXED,
+  FITNESS
+};
+
+Mode currentMode = NONE;
 
 void setup() {
   Serial.begin(115200);
   Wire.begin();
   
+  pinMode(buzzerPin, OUTPUT); 
+
   int result = bioHub.begin();
-  if (!result) {
+  if (!result)
     Serial.println("Sensor started!");
-  } else {
+  else
     Serial.println("Could not communicate with the sensor!!!");
-  }
 
   Serial.println("Configuring Sensor...");
   int error = bioHub.configBpm(MODE_ONE);
@@ -29,9 +40,33 @@ void setup() {
 }
 
 void loop() {
-    body = bioHub.readBpm();
+  if (currentMode == NONE) {
+    if (Serial.available()) {
+      char command = Serial.read();
+      switch(command) {
+        case '1': 
+          currentMode = FITNESS;
+          break;
+        case '2':
+          currentMode = RELAXED;
+          break;
+        case '3':
+          currentMode = (currentMode == FITNESS) ? RELAXED : FITNESS;
+          break;
+      }
+    }
+  }
+  if (currentMode == FITNESS) {
+       body = bioHub.readBpm();
+       beepBuzzer(body.heartRate);
     sendSerialData(body.heartRate, body.oxygen, body.confidence);
     delay(1000); 
+  } else if (currentMode == RELAXED) {
+       body = bioHub.readBpm();
+       beepBuzzer(body.heartRate);
+    sendSerialData(body.heartRate, body.oxygen, body.confidence);
+    delay(1000); 
+  }
 }
 
 void sendSerialData(int heartRate, int oxygen, int confidence) {
@@ -40,4 +75,13 @@ void sendSerialData(int heartRate, int oxygen, int confidence) {
   Serial.print(oxygen);
   Serial.print(",");
   Serial.println(confidence);
+}
+
+// Function to beep the buzzer in sync with the heartbeat
+void beepBuzzer(int heartRate) {
+  int interval = 60000 / heartRate; 
+  digitalWrite(buzzerPin, HIGH); 
+  delay(100); 
+  digitalWrite(buzzerPin, LOW); 
+  delay(interval - 100); 
 }
