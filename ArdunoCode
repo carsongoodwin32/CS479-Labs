@@ -8,23 +8,16 @@ const int mfioPin = 5;
 SparkFun_Bio_Sensor_Hub bioHub(resPin, mfioPin);
 bioData body;
 
-enum Mode {
-  NONE,
-  RELAXED,
-  FITNESS
-};
-
-Mode currentMode = NONE;
-
 void setup() {
   Serial.begin(115200);
   Wire.begin();
   
   int result = bioHub.begin();
-  if (!result)
+  if (!result) {
     Serial.println("Sensor started!");
-  else
+  } else {
     Serial.println("Could not communicate with the sensor!!!");
+  }
 
   Serial.println("Configuring Sensor...");
   int error = bioHub.configBpm(MODE_ONE);
@@ -34,30 +27,13 @@ void setup() {
     Serial.println("Error configuring sensor.");
   }
 }
+
 void loop() {
-  if (currentMode == NONE) {
-    if (Serial.available()) {
-      char command = Serial.read();
-      switch(command) {
-        case '1': 
-          currentMode = FITNESS;
-          break;
-        case '2':
-          currentMode = RELAXED;
-          break;
-      }
-    }
-  }
-   if (currentMode == FITNESS) {
-       body = bioHub.readBpm();
+    body = bioHub.readBpm();
     sendSerialData(body.heartRate, body.oxygen, body.confidence);
     delay(1000); 
-  } else if (currentMode == RELAXED) {
-       body = bioHub.readBpm();
-    sendSerialData(body.heartRate, body.oxygen, body.confidence);
-    delay(1000); 
-  }
 }
+
 void sendSerialData(int heartRate, int oxygen, int confidence) {
   Serial.print(heartRate);
   Serial.print(",");
