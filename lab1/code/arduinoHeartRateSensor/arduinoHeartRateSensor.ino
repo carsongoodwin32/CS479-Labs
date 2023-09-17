@@ -60,7 +60,11 @@ void loop() {
   } else {
     // Run other code when not receiving '1'
     body = bioHub.readBpm();
-    Serial.println(body.heartRate);
+    Serial.print(body.heartRate);
+    Serial.print(",");
+    Serial.print(body.oxygen);
+    Serial.print(",");
+    Serial.print(body.confidence);
   }
 }
 
