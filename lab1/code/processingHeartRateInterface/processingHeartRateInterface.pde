@@ -208,6 +208,10 @@ void displayGraph() {
   }
   endShape();
   fill(255);
+  float cct = (float)(60/(float)heartrate);
+  textSize(20);
+  text("Cardiac Cycle Time (in seconds): " + cct, leftMargin, topMargin + 585);
+  textSize(56);
   text("Instant Heart Rate: " + heartrate, leftMargin, topMargin + 30);
   text("Average Heart Rate: " + avgheartRate, leftMargin, topMargin + 80);
   text("SpO2: " + spo2 + "%", leftMargin, topMargin + 180);
