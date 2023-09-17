@@ -2,7 +2,7 @@ import processing.serial.*;
 import javax.swing.JOptionPane;
 //TODO
 //1. Scale UI - Done
-//2. Add Time Between heartBeats
+//2. Add Time Between heartBeats - Done
 //3. Add Time spent in each heartrate zone
 //4. ???
 //5. Profit
@@ -181,7 +181,7 @@ void displayGraph() {
   beginShape();
    for (int i = 0; i < maxValues; i++) {
     float x = map(i, 0, maxValues - 1, leftMargin, rightMargin);
-    float y = map(heartRateValues[i], 45, 222, height - topMargin*2.7, height / 2.2);
+    float y = map(heartRateValues[i], 45, 222, height - topMargin*2.7, height / 2.1);
     
     if (heartrate >= maxHeartRate * 0.9) {
       stroke(color(255, 0, 0));
