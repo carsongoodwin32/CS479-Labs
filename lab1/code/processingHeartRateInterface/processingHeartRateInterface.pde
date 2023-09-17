@@ -1,6 +1,11 @@
 import processing.serial.*;
 import javax.swing.JOptionPane;
-
+//TODO
+//1. Scale UI
+//2. Add Time Between heartBeats
+//3. Add Time spent in each heartrate zone
+//4. ???
+//5. Profit
 Serial myPort;
 PFont myFont;
 String inString;

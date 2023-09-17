@@ -2,6 +2,11 @@
 #include <SparkFun_Bio_Sensor_Hub_Library.h>
 #include <Wire.h>
 
+//TODO
+//1. Make sure buzzer works in all cases
+//2. Make sure this doesn't break anything when we upload to the real kit and test the UI
+
+
 // No other Address options.
 #define DEF_ADDR 0x55
 
