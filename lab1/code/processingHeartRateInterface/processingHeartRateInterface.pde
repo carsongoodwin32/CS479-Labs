@@ -1,7 +1,7 @@
 import processing.serial.*;
 import javax.swing.JOptionPane;
 //TODO
-//1. Scale UI
+//1. Scale UI - Done
 //2. Add Time Between heartBeats
 //3. Add Time spent in each heartrate zone
 //4. ???
@@ -38,7 +38,8 @@ int stress = 0;
 boolean newStressReport = false;
 
 void setup() {
-  size(800, 400);
+  size(1600, 800);
+  textSize(56);
   printArray(Serial.list());
   heartRateValues = new int[maxValues];
   for (int i = 0; i < maxValues; i++) {
@@ -74,7 +75,18 @@ void draw() {
     fill(255);
     displayGraph();
     if (relaxedMode) {
-      text("Relaxed v Stressed Mode", 75, 50);
+      fill(128);
+      textSize(28);
+      text("Relaxed v Stressed Mode", (width/2)-150, 50);
+      textSize(56);
+      fill(255);
+    }
+    else{
+      fill(128);
+      textSize(28);
+      text("Fitness Mode", (width/2)-125, 50);
+      textSize(56);
+      fill(255);
     }
   }
 }
@@ -169,7 +181,7 @@ void displayGraph() {
   beginShape();
    for (int i = 0; i < maxValues; i++) {
     float x = map(i, 0, maxValues - 1, leftMargin, rightMargin);
-    float y = map(heartRateValues[i], 45, 222, height - topMargin*2.4, height / 2);
+    float y = map(heartRateValues[i], 45, 222, height - topMargin*2.7, height / 2.2);
     
     if (heartrate >= maxHeartRate * 0.9) {
       stroke(color(255, 0, 0));
@@ -197,13 +209,14 @@ void displayGraph() {
   endShape();
   fill(255);
   text("Instant Heart Rate: " + heartrate, leftMargin, topMargin + 30);
-  text("Average Heart Rate: " + avgheartRate, leftMargin, topMargin + 50);
-  text("SpO2: " + spo2 + "%", leftMargin, topMargin + 90);
-  text("Confidence: " + confidence + "%", leftMargin, topMargin + 110);
+  text("Average Heart Rate: " + avgheartRate, leftMargin, topMargin + 80);
+  text("SpO2: " + spo2 + "%", leftMargin, topMargin + 180);
+  text("Confidence: " + confidence + "%", leftMargin, topMargin + 230);
   
-   text("Age-Adjusted Max Heart Rate: " + maxHeartRate, leftMargin, topMargin + 70);
+   text("Age-Adjusted Max Heart Rate: " + maxHeartRate, leftMargin, topMargin + 130);
 
-   float yPos = height * 0.85f;  
+   float yPos = height * 0.85f; 
+   textSize(30);
   String[] zoneLabels = {
     "90-100% Max", "80-90% Max", "70-80% Max", 
     "60-70% Max", "50-60% Max", "<50% Max"
@@ -216,16 +229,18 @@ void displayGraph() {
   float xPos = leftMargin;
   for (int i = 0; i < zoneLabels.length; i++) {
     fill(zoneColors[i]);
-    rect(xPos, yPos, zoneWidth, 15); 
+    rect(xPos, yPos, zoneWidth, 30); 
     // colored rectangle
-    fill(255); 
+    fill(0); 
     // white color for text
-    text(zoneLabels[i], xPos + zoneWidth / 2, yPos + 12); 
+    text(zoneLabels[i], xPos + zoneWidth / 6, yPos + 24); 
     // centering the text within the rectangle
     xPos += zoneWidth;
   }
+  textSize(56);
+  fill(255);
   determineMood();
-  text("Mood: " + mood, leftMargin, topMargin + 130);
+  text("Mood: " + mood, leftMargin, topMargin + 280);
 //if (relaxedMode) {
 //    if (avgheartRate > maxHeartRate * 0.85) {
 //      fill(color(255, 0, 0)); 
