@@ -60,17 +60,15 @@ void loop() {
   // Read the incoming data from Serial
   read = Serial.readStringUntil('\n');
 
-  if (read == "1") {
+  if (read == "3") {
     beepBuzzer();
-  } else {
-    // Run other code when not receiving '1'
-    body = bioHub.readBpm();
-    Serial.print(body.heartRate);
-    Serial.print(",");
-    Serial.print(body.oxygen);
-    Serial.print(",");
-    Serial.println(body.confidence);
   }
+  body = bioHub.readBpm();
+  Serial.print(body.heartRate);
+  Serial.print(",");
+  Serial.print(body.oxygen);
+  Serial.print(",");
+  Serial.println(body.confidence);
 }
 
 

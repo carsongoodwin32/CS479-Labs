@@ -6,7 +6,9 @@ import javax.swing.JOptionPane;
 //3. Add Time spent in each heartrate zone
 //4. ???
 //5. Profit
+char lastSent  = '$';
 Serial myPort;
+boolean beepTheBuzzer = false;
 PFont myFont;
 String inString;
 int lf = 10;
@@ -104,11 +106,12 @@ void keyPressed() {
     mood = "Relaxed"; 
     clearHeartRateValues();
   } else if (key == '3') {
-    myPort.write("1");
+    myPort.write("3");
   }
 }
 void serialEvent(Serial p) {
   inString = p.readString();
+  println("recvd val"+inString);
   String[] parts = split(trim(inString), ',');
   if (parts.length >= 3) {
     int newValue = int(float(parts[0]));
@@ -388,6 +391,7 @@ int returnStressed(){
   return result;
 }
 
+
 void determineMood() {
   if (relaxedMode) {
     if(bufferCount%10==0&&bufferCount!=0){
@@ -396,11 +400,16 @@ void determineMood() {
     }
     if(stress==0){
       mood = "Relaxed";
+      //myPort.write("$");
+      lastSent = '$';
     }
     else{
       if(newStressReport){
         mood = "Stressed";
-        myPort.write("1");
+        if(lastSent!='@'){
+          myPort.write("3");
+          lastSent = '@';
+        }
         newStressReport = false;
       }
     }
