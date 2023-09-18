@@ -69,7 +69,7 @@ void loop() {
     Serial.print(",");
     Serial.print(body.oxygen);
     Serial.print(",");
-    Serial.print(body.confidence);
+    Serial.println(body.confidence);
   }
 }
 
