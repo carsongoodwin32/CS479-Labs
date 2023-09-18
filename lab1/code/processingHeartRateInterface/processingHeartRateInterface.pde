@@ -376,12 +376,12 @@ int returnStressed(){
   avgFront = avgFront/5;
   avgBack = avgBack/5;
   if (!swapBuffer){
-    if(avgBack>=avgFront*1.2){
+    if(avgBack>=avgFront*1.1){
       result = 1;
     }
   }
   else{
-    if(avgFront>=avgBack*1.2){
+    if(avgFront>=avgBack*1.1){
       result = 1;
     }
   }
