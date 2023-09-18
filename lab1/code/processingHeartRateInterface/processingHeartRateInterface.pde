@@ -45,7 +45,7 @@ void setup() {
   for (int i = 0; i < maxValues; i++) {
     heartRateValues[i] = 0;
   }
-  myPort = new Serial(this, Serial.list()[0], 115200);
+  myPort = new Serial(this, Serial.list()[1], 115200);
   myPort.bufferUntil(lf);
   int age = -1;  
   while (age < 0 || age > 120) {
@@ -104,7 +104,7 @@ void keyPressed() {
     mood = "Relaxed"; 
     clearHeartRateValues();
   } else if (key == '3') {
-    myPort.write("3");
+    myPort.write("1");
   }
 }
 void serialEvent(Serial p) {
@@ -175,6 +175,28 @@ void displayGraph() {
   int leftMargin = (int) (width * 0.1);  
   int rightMargin = (int) (width * 0.9);
   int topMargin = (int) (height * 0.1);
+  strokeWeight(1);
+  //text("220",1450,topMargin +310);
+  line(160,topMargin +305,1435,topMargin +305);
+  //text("200",1450,topMargin +338);
+  line(160,topMargin +333,1435,topMargin +333);
+  //text("175",1450,topMargin +366);
+  line(160,topMargin +361,1435,topMargin +361);
+  //text("150",1450,topMargin +394);
+  line(160,topMargin +389,1435,topMargin +389);
+  //text("125",1450,topMargin +422);
+  line(160,topMargin +417,1435,topMargin +417);
+  //text("100",1450,topMargin +450);
+  line(160,topMargin +445,1435,topMargin +445);
+  //text("75",1450,topMargin +478);
+  line(160,topMargin +473,1435,topMargin +473);
+  //text("50",1450,topMargin +506);
+  line(160,topMargin +501,1435,topMargin +501);
+  //text("25",1450,topMargin +534);
+  line(160,topMargin +529,1435,topMargin +529);
+  //text("0",1450,topMargin +560);
+  line(160,topMargin +555,1435,topMargin +555);
+  strokeWeight(4);
   stroke(255);
   strokeWeight(4);
   noFill();
@@ -216,7 +238,37 @@ void displayGraph() {
   text("Average Heart Rate: " + avgheartRate, leftMargin, topMargin + 80);
   text("SpO2: " + spo2 + "%", leftMargin, topMargin + 180);
   text("Confidence: " + confidence + "%", leftMargin, topMargin + 230);
-  
+  textSize(20);
+  stroke(255);
+  strokeWeight(1);
+  text("220",1450,topMargin +310);
+  //line(160,topMargin +305,1435,topMargin +305);
+  text("200",1450,topMargin +338);
+  //line(160,topMargin +333,1435,topMargin +333);
+  text("175",1450,topMargin +366);
+  //line(160,topMargin +361,1435,topMargin +361);
+  text("150",1450,topMargin +394);
+  //line(160,topMargin +389,1435,topMargin +389);
+  text("125",1450,topMargin +422);
+  //line(160,topMargin +417,1435,topMargin +417);
+  text("100",1450,topMargin +450);
+  //line(160,topMargin +445,1435,topMargin +445);
+  text("75",1450,topMargin +478);
+  //line(160,topMargin +473,1435,topMargin +473);
+  text("50",1450,topMargin +506);
+  //line(160,topMargin +501,1435,topMargin +501);
+  text("25",1450,topMargin +534);
+  //line(160,topMargin +529,1435,topMargin +529);
+  text("0",1450,topMargin +560);
+  //line(160,topMargin +555,1435,topMargin +555);
+  strokeWeight(4);
+  text("Time in zone (sec)", 700,topMargin+700);
+  text(""+zone5sec/20000,250,topMargin +660);
+  text(""+zone4sec/20000,480,topMargin +660);
+  text(""+zone3sec/20000,690,topMargin +660);
+  text(""+zone2sec/20000,900,topMargin +660);
+  text(""+zone1sec/20000,1125,topMargin +660);
+  textSize(56);
    text("Age-Adjusted Max Heart Rate: " + maxHeartRate, leftMargin, topMargin + 130);
 
    float yPos = height * 0.85f; 
@@ -348,7 +400,7 @@ void determineMood() {
     else{
       if(newStressReport){
         mood = "Stressed";
-        myPort.write("3");
+        myPort.write("1");
         newStressReport = false;
       }
     }
