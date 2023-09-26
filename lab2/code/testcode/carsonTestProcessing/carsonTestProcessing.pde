@@ -79,9 +79,65 @@ void drawGraphBreath() {
 }
 
 void calculateBSHR() {
-
+  int arrayAvg = 0; // average of all values in the calibrate A3 
+  for(int i = 0; i<150; i++){//for the whole array.
+    if(calibA3[i]>0){//don't skew data with 0's
+      arrayAvg += calibA3[i];//Add up entire array
+    }
+  }
+  if(arrayAvg>0){//make sure that the average of the whole array is more than 0, if not, we probably don't have any data.
+    arrayAvg = arrayAvg/150;//get average of all values in array.
+    int[] peaksTime = new int[150];//store time of peaks
+    int numPeaks = 0;// get total number of peaks
+    boolean allowPeak = true; //only get one measurement of the same peak. disable adding a peak until we go closer to the average.
+    for(int i = 0; i<150; i++){//for the whole array.
+      if(calibA3[i]>=arrayAvg*1.2&&allowPeak){//if current value is above the average, indicating a peak, and a peak can be logged.
+        peaksTime[numPeaks] = i;//store time at which peak occured.
+        numPeaks+=1;//add 1 to total number of peaks.
+      }
+ 
+      if(calibA3[i]<=arrayAvg*.8&&!allowPeak){//if current value goes lower than our target peak value.
+        allowPeak = true;// allow another peak to be recorded.
+      }
+    }
+      baseHR = (numPeaks*2);//numPeaks in 30s, multiply by 2 to get 60s.
+    }
+  else{
+    baseHR = 0;//otherwise return 0, you are dead probably.
+  }
+  print(baseHR+"\n");
 }
+
 void calculateBSBR() {
+  int arrayAvg = 0; // average of all values in the calibrate A3 
+  for(int i = 0; i<150; i++){//for the whole array.
+    if(calibA1[i]>0){//don't skew data with 0's
+      arrayAvg += calibA1[i];//Add up entire array
+    }
+  }
+  if(arrayAvg>0){//make sure that the average of the whole array is more than 0, if not, we probably don't have any data.
+    arrayAvg = arrayAvg/150;//get average of all values in array.
+    print(arrayAvg +"avgArray\n");
+    int[] peaksTime = new int[150];//store time of peaks
+    int numPeaks = 0;// get total number of peaks
+    boolean allowPeak = true; //only get one measurement of the same peak. disable adding a peak until we go closer to the average.
+    for(int i = 0; i<150; i++){//for the whole array.
+      if(calibA1[i]<=arrayAvg&&!allowPeak){//if current value goes lower than our target peak value.
+        allowPeak = true;// allow another peak to be recorded.
+      }
+      if(calibA1[i]>=arrayAvg*1.5&&allowPeak){//if current value is above the average, indicating a peak, and a peak can be logged.
+        peaksTime[numPeaks] = i;//store time at which peak occured.
+        numPeaks+=1;//add 1 to total number of peaks.
+        allowPeak = false;
+      }
+    }
+    print(numPeaks +"numPeaks\n");
+    baseBR = ((numPeaks)*2);//return numPeaks*2 because num peaks in 30s *2 gets breathing rate per minute.
+  }
+  else{
+    baseBR = 0;//otherwise return 0, you are dead probably.
+  }
+  print(baseBR+"\n");
 
 }
 
@@ -95,7 +151,7 @@ void serialEvent(Serial port) {
       int valueA3 = values[1].equals("!") ? -1 : Integer.parseInt(values[1]);
       valuesA1[index%500] = valueA1;
       valuesA3[index%500] = valueA3;
-      print(valuesA3[index%500]+"\n");
+      //print(valuesA3[index%500]+"\n");
       index+=1;
     }
     if (values.length == 2 && !logToArrays && beginCalib) {//log to our calibration sequence arrays
