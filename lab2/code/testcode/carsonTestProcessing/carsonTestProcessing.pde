@@ -1,11 +1,6 @@
 import processing.serial.*;
 import javax.swing.JOptionPane;
-//TODO
-//1. Scale UI - Done
-//2. Add Time Between heartBeats - Done
-//3. Add Time spent in each heartrate zone
-//4. ???
-//5. Profit
+
 char lastSent  = '$';
 Serial myPort;
 boolean beepTheBuzzer = false;
