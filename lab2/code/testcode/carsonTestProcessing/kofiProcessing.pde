@@ -1,0 +1,374 @@
+import processing.serial.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+
+Serial myPort;
+int[] valuesA1 = new int[500];
+int[] valuesA3 = new int[500];
+int[] calibA1 = new int[150];
+int[] calibA3 = new int[150];
+int index = 0;
+int index2 = 0;
+int yOffset = 300;
+boolean logToArrays = false;
+boolean beginCalib = false;
+boolean userInfoEntered = false; 
+String ageInput = "";
+String genderInput = "";
+String currentMode = "";
+String modeDescription = "";
+color bgColor = color(255, 255, 255);
+String mood = "Relaxed";
+
+
+int baseHR = 0;
+int baseBR = 0;
+int currPos = 0;
+int lastBR = 10;
+
+final int GRAPH_LENGTH = 500;
+final int CALIBRATION_ARRAY_LENGTH = 150;
+
+Button fitnessButton, stressButton, meditationButton;
+
+void setup() {
+  size(800, 600);
+  myPort = new Serial(this, Serial.list()[1], 115200);
+  
+  fitnessButton = new Button("Fitness Mode", 100, 500, 150, 50, color(100, 150, 200), "Mode for tracking fitness activities.");
+  stressButton = new Button("Stress Monitoring Mode", 300, 500, 250, 50, color(200, 150, 100), "Mode for monitoring stress levels.");
+  meditationButton = new Button("Meditation Mode", 600, 500, 180, 50, color(150, 200, 100), "Mode for aiding in meditation.");
+}
+
+void draw() {
+  background(bgColor);
+  if (!userInfoEntered) {
+    drawUserInfoInput();
+  } else {
+    drawCalibSequence();
+    if (logToArrays) {
+      fill(0);
+      drawGraphBreath(150, 50);
+      fill(150, 75, 0); // Brown color for breath graph label
+      textSize(50);
+      text("Breathing Graph", 200, height - 400); // position to be adjusted as needed 
+      
+      // Showing Hyperventilating warning under the breathing graph
+      if (!currentMode.equals("Fitness Mode") && baseBR > 20) {
+        fill(255, 0, 0); // Red color for warning
+        
+        textSize(20);
+       
+        text("Warning: You may be hyperventilating. Please calm down.", 300, height - 300); // position adjustable as needed
+      }
+      if(currentMode == "Stress Monitoring Mode"){
+        fill(0, 0, 0);
+        textSize(20);
+        text("Mood: "+mood, 650, 40); // position to be adjusted as needed 
+      }
+      if(currentMode == "Meditation Mode"){//add meditation stuff here
+        text("Target Breathing Rate: " + 12 + " brpm", 650, 90);
+        if(baseBR>=1.1*10){
+          text("Target Breathing Rate exceeded!", 650, 120);
+        }
+        else{
+          text("Target Breathing Rate on track!", 650, 120);
+        }
+      
+      }
+      drawGraphEKG(150, 250);
+      fill(0, 100, 0); // Green color for EKG graph label
+      textSize(50);
+      text("EKG Graph", 150, height - 200); // Adjustable as needed for the position 
+      displayRates(); // Display Rates of Breathing and Heart Rate
+    }
+    if (!currentMode.equals("")) {
+      textSize(20);
+      fill(0);
+      textAlign(CENTER, CENTER);
+      text("Current Mode: " + currentMode, width / 2, 40);
+    }
+    fitnessButton.display();
+    stressButton.display();
+    meditationButton.display();
+    if (!modeDescription.equals("")) {
+      textSize(16);
+      fill(0);
+      text(modeDescription, 20, 550, 760, 40);
+      
+      }
+    }
+  }
+
+  void drawUserInfoInput(){
+  fill(0);
+  textSize(20);
+  text("Please enter your age: " + ageInput, 100, 200);
+  text("Please enter your gender: " + genderInput, 100, 240);
+  text("Press Enter to Continue", 100, 280);
+}
+
+void mousePressed() {
+  if (fitnessButton.isPressed()) {
+    currentMode = "Fitness Mode";
+    bgColor = color(200, 250, 250);
+    modeDescription = fitnessButton.description;
+  }
+  if (stressButton.isPressed()) {
+    currentMode = "Stress Monitoring Mode";
+    bgColor = color(250, 250, 200);
+    modeDescription = stressButton.description;
+  }
+  if (meditationButton.isPressed()) {
+    currentMode = "Meditation Mode";
+    bgColor = color(250, 250, 250);
+    modeDescription = meditationButton.description;
+  }
+}
+
+void keyPressed() {
+  if(!userInfoEntered){
+    if(key == ENTER || key == RETURN){
+      if(!ageInput.equals("") && !genderInput.equals("")) userInfoEntered = true;
+    } else if(key == BACKSPACE){
+      if(genderInput.length() > 0){
+        genderInput = genderInput.substring(0, genderInput.length() - 1);
+      } else if(ageInput.length() > 0){
+        ageInput = ageInput.substring(0, ageInput.length() - 1);
+      }
+    } else if(key >= '0' && key <= '9' && genderInput.equals("")){
+      ageInput += key;
+    } else if(ageInput.length() > 0){
+      genderInput += key;
+    }
+  } else {
+    if (key == ' ') {
+      beginCalib = true;
+    }
+    if(key == 'j'){
+       try {
+          println("Attempting To Save Array Contents To File...");
+          BufferedWriter writer = new BufferedWriter(new FileWriter("healthData.txt", false));
+          for(int i = 0; i < 500; i++) {
+            String x = "HRData:"+valuesA1[i]+",BreathData:"+valuesA3[i]; // Note you have to cast it as strings if not already
+            writer.write(x);
+            writer.newLine();  // More Platform-independent that using write("\n");
+          }
+          writer.flush();
+          writer.close();
+          println("Saved Array To File Successfully...");
+        } 
+        catch (IOException e) {
+          println("Couldnt Save Array To File... ");
+          e.printStackTrace();
+        }
+    }
+  }
+}
+
+void drawCalibSequence() {
+  fill(0, 255, 0);
+  textSize(20);
+  textAlign(CENTER, CENTER); // Centers the text
+  if (modeDescription=="") {
+    text("Calibration Mode", width / 2, 20); 
+  }
+  if (!beginCalib&&modeDescription=="") {
+    text("Please press space to begin calibration.", width / 2, 150); 
+  }
+
+  if (beginCalib&&modeDescription=="") {
+    text("Calibrating breathing rate and heart rate.", width / 2, 300); 
+  }
+}
+
+// Displaying Rates
+void displayRates() {
+  textSize(20);
+  fill(0, 0, 255); // Blue color for heart rate
+  text("Heart Rate: " + baseHR*2 + " bpm", 150, 70);
+  
+  fill(255, 0, 0); // Red color for breathing rate
+  text("Breathing Rate: " + baseBR + " brpm", 650, 70);
+}
+
+void drawGraphBreath(float startX, float startY) {
+  stroke(150, 75, 0);
+  noFill();
+  beginShape();
+  for (int i = 0; i < valuesA1.length; i++) {
+    float x = map(i, 0, valuesA1.length - 1, startX + 50, width - 20);
+    float y = map(valuesA1[i], 0, 1000, startY + 200, startY);
+    vertex(x, y);
+  }
+  endShape();
+}
+
+void drawGraphEKG(float startX, float startY) {
+  stroke(0, 100, 0);
+  noFill();
+  beginShape();
+  for (int i = 0; i < valuesA3.length; i++) {
+    float x = map(i, 0, valuesA3.length - 1, startX + 50, width - 20);
+    float y = map(valuesA3[i], 0, 1000, startY + 200, startY);
+    vertex(x, y);
+  }
+  endShape();
+}
+
+int lastPeakTime = 0;
+int peakThreshold = 100; 
+
+void calculateBSHR() {
+  for(int i=0; i<valuesA3.length; i++) {
+    if(valuesA3[i] > peakThreshold) {
+      int currentTime = millis();
+      int timeDifference = currentTime - lastPeakTime;
+
+      if(timeDifference != 0)
+        baseHR = 60000 / timeDifference; 
+
+      lastPeakTime = currentTime;
+      break;
+    }
+  }
+}
+
+
+void calculateBSBR() {
+  int breathCount = 0;
+  int peakThreshold = 100;
+  boolean canget= true;
+  for(int i = currPos - 150; i < currPos; i++) {
+    if(valuesA1[i] > peakThreshold&&canget) {
+        breathCount++;
+        canget=false;
+      }
+    if(valuesA1[i]<peakThreshold&&!canget){
+        canget=true;
+      }
+    }
+  baseBR = (int)breathCount*2;
+}
+
+int calculateArrayAverage(int[] array) {
+  int arraySum = 0;
+  for (int value : array) {
+    if (value > 0) {
+      arraySum += value;
+    }
+  }
+  return arraySum > 0 ? arraySum / array.length : 0;
+}
+
+int[] calculatePeaksTime(int[] array, int arrayAvg) {
+  int[] peaksTime = new int[array.length];
+  int numPeaks = 0;
+  boolean allowPeak = true;
+
+  for (int i = 0; i < array.length; i++) {
+    if (array[i] >= arrayAvg * 1.2 && allowPeak) {
+      peaksTime[numPeaks] = i;
+      numPeaks += 1;
+    }
+
+    if (array[i] <= arrayAvg * 0.8 && !allowPeak) {
+      allowPeak = true;
+    }
+  }
+  return peaksTime;
+}
+int updateInterval = 10; // How often to update, in number of data points.
+int updateCounter = 0; // A counter to keep track of the number of data points since the last update.
+
+void serialEvent(Serial port) {
+  String data = port.readStringUntil('\n');
+  if (data != null) {
+    data = data.trim();
+    String[] values = data.split(",");
+    if (values.length == 2 && logToArrays && !beginCalib) {
+      int valueA1 = Integer.parseInt(values[0]); // FSR Value
+      int valueA3 = values[1].equals("!") ? -1 : Integer.parseInt(values[1]); // AD8232 Value
+      
+      valuesA1[index % GRAPH_LENGTH] = valueA1;
+      valuesA3[index % GRAPH_LENGTH] = valueA3;
+      
+         if(currPos!=0&&currPos%150==0){
+           lastBR = baseBR;
+           calculateBSBR(); // recalculate breathing rate using real breath data from FSR
+           if(baseBR>=lastBR*1.1){
+             mood = "Stressed";
+           }
+           else{
+             mood = "Relaxed";
+           }
+         }
+         if(currPos%10==0){
+           calculateBSHR();
+         }
+      // recalculate heart rate using real ECG data from AD8232
+        currPos+=1;
+      
+      index += 1;
+    }
+    if (values.length == 2 && !logToArrays && beginCalib) {
+      int valueA1 = Integer.parseInt(values[0]);
+      int valueA3 = values[1].equals("!") ? -1 : Integer.parseInt(values[1]);
+      calibA1[index2] = valueA1;
+      calibA3[index2] = valueA3;
+      currPos +=1;
+      index2 += 1;
+    }
+    if (index2 >= CALIBRATION_ARRAY_LENGTH && !logToArrays && beginCalib) {
+      calculateBSHR();
+      calculateBSBR();
+      print("Calibration Complete!");
+      currPos=0;
+      logToArrays = true;
+      beginCalib = false;
+    }
+  }
+}
+void notifyHyperventilation() {
+  fill(255, 0, 0); // Red color to notify an urgent message
+  textSize(20);
+  textAlign(CENTER, CENTER);
+  text("Warning: You may be hyperventilating. Please calm down.", width / 2, height - 50);
+}
+
+class Button {
+  float x, y;
+  float w, h;
+  String label;
+  color buttonColor;
+  String description;
+
+  Button(String label, float x, float y, float w, float h, color buttonColor, String description) {
+    this.label = label;
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
+    this.buttonColor = buttonColor;
+    this.description = description;
+ }
+
+  void display() {
+    fill(buttonColor);
+    rect(x, y, w, h);
+    fill(0);
+    textSize(20);
+    textAlign(CENTER, CENTER);
+    text(label, x + w/2, y + h/2);
+    
+    if(mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + h){
+      modeDescription = this.description;
+    }
+  }
+
+  boolean isPressed() {
+    return mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + h;
+  }
+}
