@@ -16,17 +16,17 @@ void DrawInterface() {
   float totalWidth = numCols * (rectWidth + spacingX) - spacingX;
   float totalHeight = numRows * (rectHeight + spacingY) - spacingY;
 
-  // Calculate the starting x-coordinate for the first column
+  //  starting x-coordinate for the first column
   float startX = (width - totalWidth) / 2;
 
-  // Calculate the starting y-coordinate for the first row
+  // starting y-coordinate for the first row
   float startY = (height - totalHeight) / 2;
 
   for (int row = 0; row < numRows; row++) {
     for (int col = 0; col < numCols; col++) {
-      int rectNumber = row * numCols + col; // Calculate the number for each rectangle (0 to 3)
+      int rectNumber = row * numCols + col; //  number for each rectangle (0 to 3)
 
-      // Check the state of the corresponding boolean in pinStates
+      //  state of the corresponding boolean in pinStates
       if (pinStates[rectNumber]) {
         fill(255, 0, 0); // Change color to red when true
       } else {

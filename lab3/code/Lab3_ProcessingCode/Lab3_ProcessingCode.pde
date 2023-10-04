@@ -4,7 +4,7 @@ import org.gicentre.utils.stat.AbstractChart;
 
 Serial myPort;
 
-// Create a boolean array to store the state of 4 pins (initialize to false)
+// Boolean array to store the state of 4 pins (initialize to false)
 boolean[] pinStates = new boolean[4];
 
 void setup() {
@@ -25,15 +25,15 @@ void serialEvent(Serial myPort) {
     char digit = tempVal.charAt(0);
     int pinNumber = int(digit - '0'); // Convert the character to an integer
     if (pinNumber >= 0 && pinNumber < 4) {
-      // Toggle the state of the pin
+      
       pinStates[pinNumber] = !pinStates[pinNumber];
 
-      // Print the updated pinStates
+      // Updated pinStates
       for (int i = 0; i < 4; i++) {
         print(pinStates[i]);
         print('|');
       }
-      println(); // Print a newline to separate each update
+      println(); //newline to separate each update
     }
   }
 }
