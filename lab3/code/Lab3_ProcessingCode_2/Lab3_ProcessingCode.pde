@@ -16,6 +16,7 @@ void setup() {
 
 void draw() {
   DrawInterface() ;
+  showCustomDialog();
 }
 
 void serialEvent(Serial myPort) {

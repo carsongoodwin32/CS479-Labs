@@ -11,6 +11,11 @@ float littleBoxX_glob=0;
 float littleBoxY_glob=0;
 float littleBoxDimension_glob=0;
 
+
+boolean showDialog = false; // Flag to control whether to show the dialog
+String userInput = "";      // Store user input text
+
+
 void DrawInterface() {
   fill(255);
   rect(-1, -1, 1401, 901);
@@ -161,7 +166,27 @@ void DrawInterface() {
   
     fill(255); // color for the little boxes
     rect(littleBoxX, littleBoxY+400, littleBoxDimension, littleBoxDimension);
-  
+    
+    
+     if (i == numLittleBoxes - 1) {
+    // This is the last box added, display user input if available
+    float userInputX = littleBoxX + 5; // Adjust the X-coordinate for padding
+    float userInputY = littleBoxY + 5; // Adjust the Y-coordinate for padding
+    float userInputWidth = littleBoxDimension - 10; // Adjust for padding
+    float userInputHeight = littleBoxDimension - 10; // Adjust for padding
+
+    fill(0);
+
+    // Calculate text size based on the box dimensions and leading
+   
+
+    text(userInput, userInputX, userInputY + userInputHeight / 2+405);
+  }
+    
+    
+    
+    
+    
     if (i == 0 && numLittleBoxes <= 3) {
       // Add the "+" icon inside the first box
       float iconX = littleBoxX + 5;
@@ -175,34 +200,30 @@ void DrawInterface() {
       if (mouseX >= iconX && mouseX <= iconX + iconWidth && mouseY >= iconY && mouseY <= iconY + iconHeight) {
         // If the mouse is over the "+" icon inside the first box, add another little box
         numLittleBoxes = numLittleBoxes + 1;
+        showDialog=true;
       }
-    } else if (i == 0 && numLittleBoxes >= 4) {
+      } else if (i == 0 && numLittleBoxes >= 4) {
       // Add the "cross" icon inside the first box when there are 3 or more squares
       float iconX = littleBoxX + 5;
       float iconY = littleBoxY + 405;
       float iconWidth = littleBoxDimension - 10;
       float iconHeight = littleBoxDimension - 10;
   
-      image(cross, iconX, iconY, iconWidth, iconHeight);
-      if (numLittleBoxes<4){
-        // Check if the mouse is over the "cross" icon inside the first box
-        if (mouseX >= iconX && mouseX <= iconX + iconWidth && mouseY >= iconY && mouseY <= iconY+ iconHeight) {
-          // If the mouse is over the "cross" icon inside the first box, add another little box
-          numLittleBoxes = numLittleBoxes + 1;
-        }
+      image(cross, iconX, iconY, iconWidth, iconHeight);   
       }
-    }
+      
+    
+    
   }
 
   //CODE FOR THE 8 PRESETS
-                                      // Calculate dimensions based on the number of preset boxes
+  // Calculate dimensions based on the number of preset boxes
   int numPresetBoxesX = 2;            // Number of preset boxes in the X direction
   int numPresetBoxesY = 4;            // Number of preset boxes in the Y direction
   float presetBoxDimension = 80;      // Dimension of each preset box
   float spacingXPresets = 20;         // Spacing between preset boxes in the X direction
   float spacingYPresets = 20;         // Spacing between preset boxes in the Y direction
   float totalPresetWidth = (numPresetBoxesX * presetBoxDimension) + ((numPresetBoxesX - 1) * spacingXPresets);
-  float totalPresetHeight = (numPresetBoxesY * presetBoxDimension) + ((numPresetBoxesY - 1) * spacingYPresets);
   float startXPresets = leftSidePanelsX + (SidePanelsWidth - totalPresetWidth) / 2; // Start X-coordinate for preset boxes
   float startYPresets = SidePanelsY + 150; // Start Y-coordinate for preset boxes
   
@@ -218,18 +239,12 @@ void DrawInterface() {
     fill(0);
     textSize(16);
     String presetText = "Preset " + (row * numPresetBoxesX + col + 1);
-    float textWidth = textWidth(presetText); // Calculate the width of the text
+    float textWidth = textWidth(presetText);                         // Calculate the width of the text
     float textX = presetBoxX + (presetBoxDimension - textWidth) / 2; // Center the text horizontally
-    float textY = presetBoxY + presetBoxDimension / 2; // Center the text vertically
+    float textY = presetBoxY + presetBoxDimension / 2;               // Center the text vertically
     text(presetText, textX, textY);
     }
   }
-
-
-
-  
-
-    
   // RIGHT PANEL PERSONALIZATION --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   
   fill(0);
@@ -240,4 +255,102 @@ void DrawInterface() {
   float rightPanelTitleY = SidePanelsY + 30;  // Adjust the Y-coordinate as needed
   text(rightPanelTitle, rightPanelTitleX, rightPanelTitleY);
   
+}
+// FUNCITONS FOR THE LEFT PANEL ================================================================================================================================================================================
+void showCustomDialog() {
+  if (showDialog) {
+    // Calculate the dimensions of the dialog window
+    float dialogWidth = min(width - 100, 400); // Limit the width to a maximum of 400
+    float dialogHeight = min(height - 100, 400); // Limit the height to a maximum of 400
+
+    // Calculate the position of the dialog window
+    float dialogX = (width - dialogWidth) / 2;
+    float dialogY = (height - dialogHeight) / 2;
+
+    // Draw the dialog window
+    fill(255);
+    rect(dialogX, dialogY, dialogWidth, dialogHeight);
+    fill(0);
+
+    // Calculate the position of the title based on its width
+    textSize(24);
+    String titleText = "Custom Dialog";
+    float titleWidth = textWidth(titleText);
+    float titleX = dialogX + (dialogWidth - titleWidth) / 2;
+    float titleY = dialogY + 40; // Adjust the Y-coordinate as needed
+    text(titleText, titleX, titleY);
+
+    // Display user input field
+    float inputFieldX = dialogX + 50;
+    float inputFieldY = titleY + 50;
+    float inputFieldWidth = dialogWidth - 100;
+    float inputFieldHeight = 60;
+    rect(inputFieldX, inputFieldY, inputFieldWidth, inputFieldHeight);
+    
+    
+    fill(255);
+    rect(inputFieldX + 5, inputFieldY + 5, inputFieldWidth - 10, inputFieldHeight - 10);
+    fill(0);
+    text(userInput,inputFieldX + 7, inputFieldY + inputFieldHeight / 2);
+
+    // Calculate the width of the submit button based on the text "Submit"
+    textSize(16); // Adjust the text size as needed
+    String submitText = "Submit";
+    float submitTextWidth = textWidth(submitText);
+    float submitButtonWidth = submitTextWidth + 40; // Add some padding
+    float submitButtonHeight = 40;
+    float submitButtonX = dialogX + (dialogWidth - submitButtonWidth) / 2;
+    float submitButtonY = dialogY + dialogHeight - 80;
+
+    // Draw the submit button
+    fill(0, 100, 200);
+    rect(submitButtonX, submitButtonY, submitButtonWidth, submitButtonHeight);
+    fill(255);
+    text(submitText, submitButtonX + submitTextWidth/2-5, submitButtonY + submitButtonHeight / 2);
+
+  }
+}
+
+
+void mousePressed() {
+  if (showDialog) {
+    // Calculate the position and dimensions of the submit button
+    float submitButtonWidth = textWidth("Submit") + 40; // Width based on the text "Submit"
+    float submitButtonHeight = 40;
+    float dialogWidth = min(width - 100, 400); // Limit the width to a maximum of 400
+    float dialogHeight = min(height - 100, 400); // Limit the height to a maximum of 400
+
+    float dialogX = (width - dialogWidth) / 2;
+    float dialogY = (height - dialogHeight) / 2;
+    float submitButtonX = dialogX + (dialogWidth - submitButtonWidth) / 2;;
+    float submitButtonY = dialogY + dialogHeight - 80;
+    
+    // Check if the mouse click is inside the submit button
+    if (mouseX >= submitButtonX && mouseX <= submitButtonX + submitButtonWidth &&
+        mouseY >= submitButtonY && mouseY <= submitButtonY + submitButtonHeight) {
+      println("User input: " + userInput);
+      // Perform any action with the user input here
+      
+      // Close the dialog
+      showDialog = false;
+    }
+  } else {
+    // Check if the mouse click is in the center of the screen to open the dialog
+    if (mouseX >= width / 2 - 50 && mouseX <= width / 2 + 50 &&
+        mouseY >= height / 2 - 20 && mouseY <= height / 2 + 20) {
+      // Open the dialog
+      showDialog = true;
+      userInput = ""; // Reset user input
+    }
+  }
+}
+
+void keyTyped() {
+  if (showDialog) {
+    if (key >= ' ' && key <= '~') {
+      userInput += key; // Append typed characters to user input
+    } else if (key == BACKSPACE && userInput.length() > 0) {
+      userInput = userInput.substring(0, userInput.length() - 1); // Remove the last character
+    }
+  }
 }
