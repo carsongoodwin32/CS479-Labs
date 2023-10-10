@@ -13,8 +13,8 @@ float littleBoxDimension_glob=0;
 
 
 boolean showDialog = false; // Flag to control whether to show the dialog
-String userInput = "";      // Store user input text
-
+ArrayList<String> userInputList = new ArrayList<String>();
+String userInput = "";
 
 void DrawInterface() {
   fill(255);
@@ -167,26 +167,17 @@ void DrawInterface() {
     fill(255); // color for the little boxes
     rect(littleBoxX, littleBoxY+400, littleBoxDimension, littleBoxDimension);
     
-    
-     if (i == numLittleBoxes - 1) {
-    // This is the last box added, display user input if available
+  int userInputIndex = i - 1; // Adjust the index to get the correct user input
+  if (userInputIndex >= 0 && userInputIndex < userInputList.size()) {
+    // Display user input in the little box
     float userInputX = littleBoxX + 5; // Adjust the X-coordinate for padding
     float userInputY = littleBoxY + 5; // Adjust the Y-coordinate for padding
     float userInputWidth = littleBoxDimension - 10; // Adjust for padding
     float userInputHeight = littleBoxDimension - 10; // Adjust for padding
 
     fill(0);
-
-    // Calculate text size based on the box dimensions and leading
-   
-
-    text(userInput, userInputX, userInputY + userInputHeight / 2+405);
+    text(userInputList.get(userInputIndex), userInputX, userInputY + userInputHeight / 2 + 405);
   }
-    
-    
-    
-    
-    
     if (i == 0 && numLittleBoxes <= 3) {
       // Add the "+" icon inside the first box
       float iconX = littleBoxX + 5;
@@ -200,6 +191,7 @@ void DrawInterface() {
       if (mouseX >= iconX && mouseX <= iconX + iconWidth && mouseY >= iconY && mouseY <= iconY + iconHeight) {
         // If the mouse is over the "+" icon inside the first box, add another little box
         numLittleBoxes = numLittleBoxes + 1;
+        userInputList.add(userInput);
         showDialog=true;
       }
       } else if (i == 0 && numLittleBoxes >= 4) {
@@ -211,9 +203,6 @@ void DrawInterface() {
   
       image(cross, iconX, iconY, iconWidth, iconHeight);   
       }
-      
-    
-    
   }
 
   //CODE FOR THE 8 PRESETS
@@ -257,6 +246,7 @@ void DrawInterface() {
   
 }
 // FUNCITONS FOR THE LEFT PANEL ================================================================================================================================================================================
+
 void showCustomDialog() {
   if (showDialog) {
     // Calculate the dimensions of the dialog window
@@ -349,8 +339,12 @@ void keyTyped() {
   if (showDialog) {
     if (key >= ' ' && key <= '~') {
       userInput += key; // Append typed characters to user input
+      userInputList.add(String.valueOf(key)); // Convert the typed character to a String and add it to the ArrayList
     } else if (key == BACKSPACE && userInput.length() > 0) {
       userInput = userInput.substring(0, userInput.length() - 1); // Remove the last character
+      if (!userInputList.isEmpty()) {
+        userInputList.remove(userInputList.size() - 1); // Remove the last character from the ArrayList
+      }
     }
   }
 }
