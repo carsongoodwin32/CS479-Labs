@@ -11,10 +11,22 @@ float littleBoxX_glob=0;
 float littleBoxY_glob=0;
 float littleBoxDimension_glob=0;
 
-
+//Those global variables are useful for the dynamic squares of the left panel 
+float leftSidePanelsX;           // Declare leftSidePanelsX as a global variable
+float spacingBetweenLittleBoxes; // Declare spacingBetweenLittleBoxes as a global variable
+float SidePanelsY;
+float littleBoxDimension;
 boolean showDialog = false; // Flag to control whether to show the dialog
 ArrayList<String> userInputList = new ArrayList<String>();
 String userInput = "";
+
+// For drag and drop 
+
+int draggingIndex = -1; // Index of the square being dragged, initialized to -1 (no square is being dragged)
+float offsetX, offsetY; // Offset of the mouse pointer from the top-left corner of the dragged square
+
+
+
 
 void DrawInterface() {
   fill(255);
@@ -125,9 +137,9 @@ void DrawInterface() {
   // Define the properties for the left and right big boxes
   float SidePanelsWidth = (width - totalWidth) / 2.3;         // Width of the additional big boxes
   float SidePanelsHeight =additionalFactor+  totalHeight + spacingY;          // Height of the big boxes
-  float leftSidePanelsX = margin;                           // X-coordinate of the left big box
+  leftSidePanelsX = margin;                           // X-coordinate of the left big box
   float rightSidePanelsX = width - SidePanelsWidth-margin;  // X-coordinate of the right big box
-  float SidePanelsY = (height - SidePanelsHeight) / 2;      // Y-coordinate of both big boxes
+  SidePanelsY = (height - SidePanelsHeight) / 2;      // Y-coordinate of both big boxes
   
   // Draw the left panel
   noFill();
@@ -157,27 +169,38 @@ void DrawInterface() {
   // Calculate dimensions based on the number of little boxes
   float minLittleBoxDimension = 60; // Minimum dimension of the little boxes
   float totalLittleBoxWidth = numLittleBoxes * minLittleBoxDimension;
-  float spacingBetweenLittleBoxes = (SidePanelsWidth - totalLittleBoxWidth) / (numLittleBoxes + 1); // Adjusted spacing
+  spacingBetweenLittleBoxes = (SidePanelsWidth - totalLittleBoxWidth) / (numLittleBoxes + 1); // Adjusted spacing
   
   for (int i = 0; i < numLittleBoxes; i++) {
-    float littleBoxDimension = minLittleBoxDimension;
+    littleBoxDimension = minLittleBoxDimension;
     float littleBoxX = leftSidePanelsX + (i + 1) * spacingBetweenLittleBoxes + i * littleBoxDimension; // Calculate X-position
     float littleBoxY = SidePanelsY + 100; // Adjust the Y-coordinate as needed
   
     fill(255); // color for the little boxes
     rect(littleBoxX, littleBoxY+400, littleBoxDimension, littleBoxDimension);
     
-  int userInputIndex = i - 1; // Adjust the index to get the correct user input
-  if (userInputIndex >= 0 && userInputIndex < userInputList.size()) {
-    // Display user input in the little box
-    float userInputX = littleBoxX + 5; // Adjust the X-coordinate for padding
-    float userInputY = littleBoxY + 5; // Adjust the Y-coordinate for padding
-    float userInputWidth = littleBoxDimension - 10; // Adjust for padding
-    float userInputHeight = littleBoxDimension - 10; // Adjust for padding
-
-    fill(0);
-    text(userInputList.get(userInputIndex), userInputX, userInputY + userInputHeight / 2 + 405);
-  }
+   if (numLittleBoxes>1){
+      // Display user input in the little box
+      float userInputX = littleBoxX + 5; // Adjust the X-coordinate for padding
+      float userInputY = littleBoxY + 5; // Adjust the Y-coordinate for padding
+      float userInputHeight = littleBoxDimension - 10; // Adjust for padding
+     
+      fill(0);
+      if (!userInputList.isEmpty() && i > 0 && i <= userInputList.size()) {
+        text(userInputList.get(i-1), userInputX, userInputY + userInputHeight / 2 + 405);
+      } 
+   }
+   
+   // Check if the mouse if over the squares
+   
+   if (i!=0 && !showDialog){
+   if (mouseX >= littleBoxX + 5 && mouseX <= littleBoxX + 5 + littleBoxDimension - 10 && mouseY >= littleBoxY + 405 && mouseY <= littleBoxY + 405 +  littleBoxDimension - 10) {
+     cursor(HAND);
+   } else {
+     cursor(ARROW);
+   }
+   }
+      
     if (i == 0 && numLittleBoxes <= 3) {
       // Add the "+" icon inside the first box
       float iconX = littleBoxX + 5;
@@ -191,7 +214,6 @@ void DrawInterface() {
       if (mouseX >= iconX && mouseX <= iconX + iconWidth && mouseY >= iconY && mouseY <= iconY + iconHeight) {
         // If the mouse is over the "+" icon inside the first box, add another little box
         numLittleBoxes = numLittleBoxes + 1;
-        userInputList.add(userInput);
         showDialog=true;
       }
       } else if (i == 0 && numLittleBoxes >= 4) {
@@ -245,8 +267,11 @@ void DrawInterface() {
   text(rightPanelTitle, rightPanelTitleX, rightPanelTitleY);
   
 }
-// FUNCITONS FOR THE LEFT PANEL ================================================================================================================================================================================
 
+
+
+
+// FUNCITONS FOR THE LEFT PANEL ================================================================================================================================================================================
 void showCustomDialog() {
   if (showDialog) {
     // Calculate the dimensions of the dialog window
@@ -314,37 +339,57 @@ void mousePressed() {
     float dialogY = (height - dialogHeight) / 2;
     float submitButtonX = dialogX + (dialogWidth - submitButtonWidth) / 2;;
     float submitButtonY = dialogY + dialogHeight - 80;
-    
+
     // Check if the mouse click is inside the submit button
     if (mouseX >= submitButtonX && mouseX <= submitButtonX + submitButtonWidth &&
         mouseY >= submitButtonY && mouseY <= submitButtonY + submitButtonHeight) {
-      println("User input: " + userInput);
-      // Perform any action with the user input here
-      
-      // Close the dialog
-      showDialog = false;
-    }
-  } else {
-    // Check if the mouse click is in the center of the screen to open the dialog
-    if (mouseX >= width / 2 - 50 && mouseX <= width / 2 + 50 &&
-        mouseY >= height / 2 - 20 && mouseY <= height / 2 + 20) {
-      // Open the dialog
-      showDialog = true;
-      userInput = ""; // Reset user input
-    }
+        println("User input: " + userInput);
+        // Close the dialog
+        userInputList.add(userInput);
+        showDialog = false;
+        userInput = ""; // Reset user input to an empty string
+      }
+    } else {
+      // Check if the mouse click is in the center of the screen to open the dialog
+      if (mouseX >= width / 2 - 50 && mouseX <= width / 2 + 50 &&
+          mouseY >= height / 2 - 20 && mouseY <= height / 2 + 20) {
+        // Open the dialog and reset user input
+        showDialog = true;
+        userInput = ""; // Reset user input to an empty string
+        currentCharIndex = 0; // Reset current character index
+      }
   }
 }
 
+
+
+int currentCharIndex=0;
 void keyTyped() {
   if (showDialog) {
     if (key >= ' ' && key <= '~') {
-      userInput += key; // Append typed characters to user input
-      userInputList.add(String.valueOf(key)); // Convert the typed character to a String and add it to the ArrayList
+      // Append the typed character to the user input
+      userInput += key;
+
+      // Check if there are more characters to display
+      if (currentCharIndex < userInput.length()) {
+        // Get the next character from the input
+        char typedChar = userInput.charAt(currentCharIndex);
+
+        // Display the character in the corresponding little box
+        if (currentCharIndex < numLittleBoxes) {
+          float userInputX = leftSidePanelsX + (currentCharIndex + 1) * spacingBetweenLittleBoxes + currentCharIndex * littleBoxDimension;
+          float userInputY = SidePanelsY + 100;
+          float userInputHeight = littleBoxDimension - 10;
+
+          fill(0);
+          text(typedChar, userInputX + 5, userInputY + userInputHeight / 2 + 405);
+         }
+
+        currentCharIndex++; // Move to the next character
+      }
     } else if (key == BACKSPACE && userInput.length() > 0) {
       userInput = userInput.substring(0, userInput.length() - 1); // Remove the last character
-      if (!userInputList.isEmpty()) {
-        userInputList.remove(userInputList.size() - 1); // Remove the last character from the ArrayList
-      }
+      currentCharIndex--; // Update the current character index
     }
   }
 }
