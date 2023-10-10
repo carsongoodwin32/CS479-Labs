@@ -1,6 +1,7 @@
-PImage arrow; // Declare a PImage variable to hold the arrow image
+
 PImage plus;  // Declare a PImage variable to hold the plus image
 PImage cross;  // Declare a PImage variable to hold the cross image
+PImage harm;
 
 ArrayList<Float> littleBoxXPositions = new ArrayList<Float>(); // Store X-positions of little boxes of the left panel 
 float SidePanelsX_glob=0;                                      // needed global variable to add icon on the left panels 
@@ -25,6 +26,7 @@ String userInput = "";
 int draggingIndex = -1; // Index of the square being dragged, initialized to -1 (no square is being dragged)
 float offsetX, offsetY; // Offset of the mouse pointer from the top-left corner of the dragged square
 
+boolean showInfo = false;
 
 
 
@@ -48,9 +50,9 @@ void DrawInterface() {
   
   
   // MAIN BUTTONS ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-   arrow = loadImage("arrow.png"); // Load the arrow image
    plus = loadImage("plus.png");
    cross = loadImage("cross.png");
+   harm = loadImage("harm.jpg");
    
   int numRows = 2;
   int numCols = 3;
@@ -68,18 +70,23 @@ void DrawInterface() {
 
   // Starting y-coordinate for the first row
   float startY = (height - totalHeight) / 2;
-
+  pushMatrix();
+  translate(100 + 400 / 2, 100 + 200 / 2); // Translate to the center of the image
+  rotate(HALF_PI); // Rotate by 90 degrees (PI/2)
+  //image(harm, -200, -1400, 900, 1300); // Display the rotated image
+  popMatrix();
   for (int row = 0; row < numRows; row++) {
     for (int col = 0; col < numCols; col++) {
-      
-      if (!((row==0 && col ==0 )||(row==0 && col ==2 ))){
+      // Determine the fill color based on the row
+    fill(row == 0 ? color(255, 105, 180) : color(148, 0, 211)); // Purple for the first row, dark violet for the second row
+
          int rectNumber = row * numRows + col;
         // State of the corresponding boolean in pinStates
-        if (pinStates[rectNumber-1]) {
-          fill(255, 0, 0); // Change color to red when true
-        } else {
-          fill(0, 255, 0); // Change color to green when false
-        }
+        //if (pinStates[rectNumber-1]) {
+        //  fill(255, 0, 0); // Change color to red when true
+        //} else {
+        //  fill(0, 255, 0); // Change color to green when false
+        //}
   
   
         float x = startX + col * (rectWidth + spacingX);
@@ -89,35 +96,11 @@ void DrawInterface() {
          // Calculate the center of the rectangle
         float centerX = x + rectWidth / 2;
         float centerY = y + rectHeight / 2;
-  
-        // Calculate the maximum height for the arrow to fit inside the square
-        float maxArrowHeight = min(rectWidth, rectHeight);
-  
-        // Calculate the scale factor for the arrow image
-        float scaleFactor = maxArrowHeight / arrow.height;
-  
-        // Calculate the scaled width and height of the arrow
-        float scaledArrowWidth = arrow.width * scaleFactor;
-        float scaledArrowHeight = arrow.height * scaleFactor;
-  
-              // Determine the rotation angle based on the row and column
-        float rotationAngle = 0; // Default to no rotation
-        if (row == 0 && col == 1) {
-          rotationAngle = radians(90); // Rotate by 90 degrees
-        } else if (row == 1 && col == 2) {
-          rotationAngle = radians(180); // Rotate by 180 degrees
-        } else if (row == 1 && col == 1) {
-          rotationAngle = radians(270); // Rotate by 270 degrees
-        }
-  
-        pushMatrix();
-        translate(centerX, centerY); // Translate to the center of the square
-        rotate(rotationAngle); // Rotate the image
-        image(arrow, -scaledArrowWidth / 2, -scaledArrowHeight / 2, scaledArrowWidth, scaledArrowHeight);
-        popMatrix();
       }
     }
-  }
+    
+  
+
   
   //PANELS -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   
@@ -133,6 +116,26 @@ void DrawInterface() {
   stroke(0);
   strokeWeight(2);
   rect(CentralPanelX, CentralPanelY, CentralPanelWidth, CentralPanelHeight);
+  
+    stroke(0); // Set the stroke color to black
+  float lineY1 = CentralPanelY  + 100; // Y-coordinate for the upper line
+  float lineY2 = CentralPanelY + CentralPanelHeight - 150; // Y-coordinate for the lower line
+  line(CentralPanelX, lineY1, CentralPanelX + CentralPanelWidth, lineY1); // Upper line
+  line(CentralPanelX, lineY2, CentralPanelX + CentralPanelWidth, lineY2); // Lower line
+
+  
+  
+  
+  fill(0);
+  textSize(24);
+  String title_centralPanel = "Sensors on your skin"; // Your title text  
+  float titleWidth_centralPanel  = textWidth(title_centralPanel); // Calculate the width of the text
+  // Calculate the x-coordinate for the text to center it horizontally
+  float x_t_centralPanel = (width - titleWidth_centralPanel) / 2;
+  text(title_centralPanel, x_t_centralPanel, 155); // Draw the centered text
+  
+  
+  
   
   // Define the properties for the left and right big boxes
   float SidePanelsWidth = (width - totalWidth) / 2.3;         // Width of the additional big boxes
@@ -222,8 +225,9 @@ void DrawInterface() {
 
 // Set the default cursor to ARROW
 cursor(ARROW);
+showInfo=false;
 
-if (numLittleBoxes == 2) {
+if (numLittleBoxes == 2 && !showDialog) {
   float littleBoxX_0 = leftSidePanelsX + (1 + 1) * spacingBetweenLittleBoxes + 1 * littleBoxDimension; // Calculate X-position
   float littleBoxY_0 = SidePanelsY + 100; // Adjust the Y-coordinate as needed
 
@@ -231,8 +235,9 @@ if (numLittleBoxes == 2) {
       mouseY >= littleBoxY_0 + 405 && mouseY <= littleBoxY_0 + 405 +  littleBoxDimension - 10) {
     // Mouse is over the first little box (i=0)
     cursor(HAND);
+    showInfo = true;
   }
-} else if (numLittleBoxes == 3) {
+} else if (numLittleBoxes == 3 && !showDialog) {
   float littleBoxX_0 = leftSidePanelsX + (1 + 1) * spacingBetweenLittleBoxes + 1 * littleBoxDimension; // Calculate X-position
   float littleBoxY_0 = SidePanelsY + 100; // Adjust the Y-coordinate as needed
 
@@ -240,6 +245,7 @@ if (numLittleBoxes == 2) {
       mouseY >= littleBoxY_0 + 405 && mouseY <= littleBoxY_0 + 405 +  littleBoxDimension - 10) {
     // Mouse is over the first little box (i=0)
     cursor(HAND);
+    showInfo = true;
   }
   
   float littleBoxX_2 = leftSidePanelsX + (2 + 1) * spacingBetweenLittleBoxes + 2 * littleBoxDimension; // Calculate X-position
@@ -249,8 +255,9 @@ if (numLittleBoxes == 2) {
       mouseY >= littleBoxY_2 + 405 && mouseY <= littleBoxY_2 + 405 +  littleBoxDimension - 10) {
     // Mouse is over the third little box (i=2)
     cursor(HAND);
+    showInfo = true;
   }
-} else if (numLittleBoxes == 4) {
+} else if (numLittleBoxes == 4 && !showDialog) {
   float littleBoxX_0 = leftSidePanelsX + (1 + 1) * spacingBetweenLittleBoxes + 1 * littleBoxDimension; // Calculate X-position
   float littleBoxY_0 = SidePanelsY + 100; // Adjust the Y-coordinate as needed
 
@@ -258,6 +265,7 @@ if (numLittleBoxes == 2) {
       mouseY >= littleBoxY_0 + 405 && mouseY <= littleBoxY_0 + 405 +  littleBoxDimension - 10) {
     // Mouse is over the first little box (i=0)
     cursor(HAND);
+    showInfo = true;
   }
 
   float littleBoxX_2 = leftSidePanelsX + (2 + 1) * spacingBetweenLittleBoxes + 2 * littleBoxDimension; // Calculate X-position
@@ -267,6 +275,7 @@ if (numLittleBoxes == 2) {
       mouseY >= littleBoxY_2 + 405 && mouseY <= littleBoxY_2 + 405 +  littleBoxDimension - 10) {
     // Mouse is over the third little box (i=2)
     cursor(HAND);
+    showInfo = true;
   }
 
   float littleBoxX_3 = leftSidePanelsX + (3 + 1) * spacingBetweenLittleBoxes + 3 * littleBoxDimension; // Calculate X-position
@@ -276,6 +285,7 @@ if (numLittleBoxes == 2) {
       mouseY >= littleBoxY_3 + 405 && mouseY <= littleBoxY_3 + 405 +  littleBoxDimension - 10) {
     // Mouse is over the fourth little box (i=3)
     cursor(HAND);
+    showInfo = true;
   }
 }
 
@@ -297,13 +307,14 @@ for (int row = 0; row < numPresetBoxesY; row++) {
     float presetBoxY = -60 + startYPresets + row * (presetBoxDimension + spacingYPresets);
 
     // Check if the mouse is over the current preset box
-    if (mouseX >= presetBoxX && mouseX <= presetBoxX + presetBoxDimension &&
-        mouseY >= presetBoxY && mouseY <= presetBoxY + presetBoxDimension) {
+    if ((mouseX >= presetBoxX && mouseX <= presetBoxX + presetBoxDimension &&
+        mouseY >= presetBoxY && mouseY <= presetBoxY + presetBoxDimension) && !showDialog) {
       // Mouse is over the current preset box
       // Add your code here for handling this case
 
       // Optionally, you can change the cursor to indicate interactivity
       cursor(HAND);
+      showInfo = true;
     }
     
     // Draw the preset box
@@ -320,24 +331,16 @@ for (int row = 0; row < numPresetBoxesY; row++) {
   }
 }
 
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+// Display the info box when showDialog is true
+if (showInfo) {
+  fill(255); // White background for the dialog box
+  rect(50, 50, 300, 100); // Adjust the position and size of the dialog box as needed
+  fill(0);
+  textSize(16);
+  text("Select the feature", 70, 90); // Adjust the text position as needed
+}
+
+ 
   
   // RIGHT PANEL PERSONALIZATION --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   
@@ -350,9 +353,6 @@ for (int row = 0; row < numPresetBoxesY; row++) {
   text(rightPanelTitle, rightPanelTitleX, rightPanelTitleY);
   
 }
-
-
-
 
 // FUNCITONS FOR THE LEFT PANEL ================================================================================================================================================================================
 void showCustomDialog() {
