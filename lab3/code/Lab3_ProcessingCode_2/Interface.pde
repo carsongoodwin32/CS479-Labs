@@ -158,9 +158,9 @@ void DrawInterface() {
   fill(0);
   textSize(24);
   String leftPanelTitle = "Other features you might like";
-  float leftPanelTitleWidth = textWidth(leftPanelTitle);
-  float leftPanelTitleX = leftSidePanelsX + (SidePanelsWidth - leftPanelTitleWidth) / 2;
-  float leftPanelTitleY = SidePanelsY + 30;  // Adjust the Y-coordinate as needed
+  float  leftPanelTitleWidth = textWidth(leftPanelTitle);
+  float  leftPanelTitleX = leftSidePanelsX + (SidePanelsWidth - leftPanelTitleWidth) / 2;
+  float  leftPanelTitleY = SidePanelsY + 30;  // Adjust the Y-coordinate as needed
   text(leftPanelTitle, leftPanelTitleX, leftPanelTitleY);
   
   
@@ -191,15 +191,6 @@ void DrawInterface() {
       } 
    }
    
-   // Check if the mouse if over the squares
-   
-   if (i!=0 && !showDialog){
-   if (mouseX >= littleBoxX + 5 && mouseX <= littleBoxX + 5 + littleBoxDimension - 10 && mouseY >= littleBoxY + 405 && mouseY <= littleBoxY + 405 +  littleBoxDimension - 10) {
-     cursor(HAND);
-   } else {
-     cursor(ARROW);
-   }
-   }
       
     if (i == 0 && numLittleBoxes <= 3) {
       // Add the "+" icon inside the first box
@@ -227,6 +218,67 @@ void DrawInterface() {
       }
   }
 
+// here the code to understand if the mouse is on the 1  2 3 boxes 
+
+// Set the default cursor to ARROW
+cursor(ARROW);
+
+if (numLittleBoxes == 2) {
+  float littleBoxX_0 = leftSidePanelsX + (1 + 1) * spacingBetweenLittleBoxes + 1 * littleBoxDimension; // Calculate X-position
+  float littleBoxY_0 = SidePanelsY + 100; // Adjust the Y-coordinate as needed
+
+  if (mouseX >= littleBoxX_0 + 5 && mouseX <= littleBoxX_0 + 5 + littleBoxDimension - 10 &&
+      mouseY >= littleBoxY_0 + 405 && mouseY <= littleBoxY_0 + 405 +  littleBoxDimension - 10) {
+    // Mouse is over the first little box (i=0)
+    cursor(HAND);
+  }
+} else if (numLittleBoxes == 3) {
+  float littleBoxX_0 = leftSidePanelsX + (1 + 1) * spacingBetweenLittleBoxes + 1 * littleBoxDimension; // Calculate X-position
+  float littleBoxY_0 = SidePanelsY + 100; // Adjust the Y-coordinate as needed
+
+  if (mouseX >= littleBoxX_0 + 5 && mouseX <= littleBoxX_0 + 5 + littleBoxDimension - 10 &&
+      mouseY >= littleBoxY_0 + 405 && mouseY <= littleBoxY_0 + 405 +  littleBoxDimension - 10) {
+    // Mouse is over the first little box (i=0)
+    cursor(HAND);
+  }
+  
+  float littleBoxX_2 = leftSidePanelsX + (2 + 1) * spacingBetweenLittleBoxes + 2 * littleBoxDimension; // Calculate X-position
+  float littleBoxY_2 = SidePanelsY + 100; // Adjust the Y-coordinate as needed
+
+  if (mouseX >= littleBoxX_2 + 5 && mouseX <= littleBoxX_2 + 5 + littleBoxDimension - 10 &&
+      mouseY >= littleBoxY_2 + 405 && mouseY <= littleBoxY_2 + 405 +  littleBoxDimension - 10) {
+    // Mouse is over the third little box (i=2)
+    cursor(HAND);
+  }
+} else if (numLittleBoxes == 4) {
+  float littleBoxX_0 = leftSidePanelsX + (1 + 1) * spacingBetweenLittleBoxes + 1 * littleBoxDimension; // Calculate X-position
+  float littleBoxY_0 = SidePanelsY + 100; // Adjust the Y-coordinate as needed
+
+  if (mouseX >= littleBoxX_0 + 5 && mouseX <= littleBoxX_0 + 5 + littleBoxDimension - 10 &&
+      mouseY >= littleBoxY_0 + 405 && mouseY <= littleBoxY_0 + 405 +  littleBoxDimension - 10) {
+    // Mouse is over the first little box (i=0)
+    cursor(HAND);
+  }
+
+  float littleBoxX_2 = leftSidePanelsX + (2 + 1) * spacingBetweenLittleBoxes + 2 * littleBoxDimension; // Calculate X-position
+  float littleBoxY_2 = SidePanelsY + 100; // Adjust the Y-coordinate as needed
+
+  if (mouseX >= littleBoxX_2 + 5 && mouseX <= littleBoxX_2 + 5 + littleBoxDimension - 10 &&
+      mouseY >= littleBoxY_2 + 405 && mouseY <= littleBoxY_2 + 405 +  littleBoxDimension - 10) {
+    // Mouse is over the third little box (i=2)
+    cursor(HAND);
+  }
+
+  float littleBoxX_3 = leftSidePanelsX + (3 + 1) * spacingBetweenLittleBoxes + 3 * littleBoxDimension; // Calculate X-position
+  float littleBoxY_3 = SidePanelsY + 100; // Adjust the Y-coordinate as needed
+
+  if (mouseX >= littleBoxX_3 + 5 && mouseX <= littleBoxX_3 + 5 + littleBoxDimension - 10 &&
+      mouseY >= littleBoxY_3 + 405 && mouseY <= littleBoxY_3 + 405 +  littleBoxDimension - 10) {
+    // Mouse is over the fourth little box (i=3)
+    cursor(HAND);
+  }
+}
+
   //CODE FOR THE 8 PRESETS
   // Calculate dimensions based on the number of preset boxes
   int numPresetBoxesX = 2;            // Number of preset boxes in the X direction
@@ -238,15 +290,26 @@ void DrawInterface() {
   float startXPresets = leftSidePanelsX + (SidePanelsWidth - totalPresetWidth) / 2; // Start X-coordinate for preset boxes
   float startYPresets = SidePanelsY + 150; // Start Y-coordinate for preset boxes
   
-  for (int row = 0; row < numPresetBoxesY; row++) {
-    for (int col = 0; col < numPresetBoxesX; col++) {
-      float presetBoxX = startXPresets + col * (presetBoxDimension + spacingXPresets);
-      float presetBoxY = -60 + startYPresets + row * (presetBoxDimension + spacingYPresets);
-      
-      // Draw the preset box
-      fill(200); // Color of the preset box
-      rect(presetBoxX, presetBoxY, presetBoxDimension, presetBoxDimension);
-  
+// Iterate through the rows and columns of the preset boxes
+for (int row = 0; row < numPresetBoxesY; row++) {
+  for (int col = 0; col < numPresetBoxesX; col++) {
+    float presetBoxX = startXPresets + col * (presetBoxDimension + spacingXPresets);
+    float presetBoxY = -60 + startYPresets + row * (presetBoxDimension + spacingYPresets);
+
+    // Check if the mouse is over the current preset box
+    if (mouseX >= presetBoxX && mouseX <= presetBoxX + presetBoxDimension &&
+        mouseY >= presetBoxY && mouseY <= presetBoxY + presetBoxDimension) {
+      // Mouse is over the current preset box
+      // Add your code here for handling this case
+
+      // Optionally, you can change the cursor to indicate interactivity
+      cursor(HAND);
+    }
+    
+    // Draw the preset box
+    fill(200); // Color of the preset box
+    rect(presetBoxX, presetBoxY, presetBoxDimension, presetBoxDimension);
+
     fill(0);
     textSize(16);
     String presetText = "Preset " + (row * numPresetBoxesX + col + 1);
@@ -254,8 +317,28 @@ void DrawInterface() {
     float textX = presetBoxX + (presetBoxDimension - textWidth) / 2; // Center the text horizontally
     float textY = presetBoxY + presetBoxDimension / 2;               // Center the text vertically
     text(presetText, textX, textY);
-    }
   }
+}
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   // RIGHT PANEL PERSONALIZATION --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   
   fill(0);
