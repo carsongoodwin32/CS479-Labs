@@ -32,25 +32,33 @@ void draw() {
 }
 
 void createGUI() {
-  GButton button = new GButton(this, width - 160, 10, 150, 30);
+  GButton button = new GButton(this, 1060, 400, 300, 100);
   button.setText("Start Twitch Module");
   button.addEventHandler(this, "startIntegration");
 }
 void startIntegration(GButton button, GEvent event) {
-  // This function will be called when the button is pressed.
-  // You can define what happens when the button is pressed here.
-  
-  // In this example, we're launching another Processing script named 'other_script.pde'
-  // The script should be in the same folder as 'main_script'
-  String[] cmd = {"processing-java", "--sketch=" + sketchPath("") + "ProcessingTest/ProcessingTest", "--run"};
-  
-  try {
-    Process process = Runtime.getRuntime().exec(cmd);
-    process.waitFor();
-  } catch (IOException | InterruptedException e) {
-    e.printStackTrace();
-  }
+  Thread processingThread = new Thread(new Runnable() {
+    @Override
+    public void run() {
+      // This function will be called when the button is pressed.
+      // You can define what happens when the button is pressed here.
+
+      // In this example, we're launching another Processing script named 'other_script.pde'
+      // The script should be in the same folder as 'main_script'
+      String[] cmd = {"/usr/local/bin/processing-java", "--sketch=" + sketchPath("") + "ProcessingTest", "--run"};
+
+      try {
+        Process process = Runtime.getRuntime().exec(cmd);
+        process.waitFor();
+      } catch (IOException | InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
+  });
+
+  processingThread.start();
 }
+
 
 void serialEvent(Serial myPort) {
    String tempVal = myPort.readStringUntil('\n');
