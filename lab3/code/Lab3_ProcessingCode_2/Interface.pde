@@ -3,6 +3,7 @@ PImage plus;  // Declare a PImage variable to hold the plus image
 PImage cross;  // Declare a PImage variable to hold the cross image
 PImage harm;
 
+ArrayList<Button> mainButtons = new ArrayList<Button>();
 ArrayList<Float> littleBoxXPositions = new ArrayList<Float>(); // Store X-positions of little boxes of the left panel 
 float SidePanelsX_glob=0;                                      // needed global variable to add icon on the left panels 
 float minLittleBoxDimension_glob = 0;                          // needed global variable to add icon on the left panels 
@@ -92,6 +93,7 @@ void DrawInterface() {
         float x = startX + col * (rectWidth + spacingX);
         float y = startY + row * (rectHeight + spacingY);
         rect(x, y, rectWidth, rectHeight);
+        mainButtons.add(new Button("",".",rectNumber+48,x,y));
         
          // Calculate the center of the rectangle
         float centerX = x + rectWidth / 2;
