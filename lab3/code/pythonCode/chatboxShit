@@ -1,0 +1,74 @@
+PFont font;
+ArrayList<String> messages;
+int maxMessages = 10; // Maximum number of messages to display
+float messageSpacing = 20; // Spacing between messages
+PVector textPosition;
+
+void setup() {
+  size(400, 300);
+  font = createFont("Arial", 16);
+  messages = new ArrayList<String>();
+  textPosition = new PVector(20, height - 40); // Initial text position
+}
+
+void draw() {
+  background(220);
+  
+  // Display the messages
+  fill(0);
+  textFont(font);
+  textAlign(LEFT);
+  for (int i = 0; i < messages.size(); i++) {
+    String message = messages.get(i);
+    text(message, textPosition.x, textPosition.y - i * messageSpacing);
+  }
+}
+
+void addMessage(String message) {
+  messages.add(0, message); // Add new message to the beginning of the list
+  if (messages.size() > maxMessages) {
+    messages.remove(messages.size() - 1); // Remove the oldest message if the list is too long
+  }
+}
+
+void keyPressed() {
+  if (key == '\n') {
+    String input = trim(getInputText()); // Get user input and remove leading/trailing spaces
+    if (!input.isEmpty()) {
+      addMessage("You: " + input); // Add user message to the chat
+      // Process the input as needed (e.g., send it to a server or respond to it)
+      // Replace this with your own logic.
+      // ...
+      clearInputText(); // Clear the input field
+    }
+  }
+}
+
+String getInputText() {
+  return select("input_text").value();
+}
+
+void clearInputText() {
+  select("input_text").setText("");
+}
+
+void settings() {
+  // Create a text input field for user input
+  TextInput inputText = createInput("");
+  inputText.id("input_text");
+  inputText.attribute("autofocus", "true"); // Autofocus on the input field
+  inputText.position(20, height - 20);
+  inputText.size(360, 20);
+  inputText.style("padding", "5px");
+  inputText.style("font-size", "16px");
+  inputText.style("border", "1px solid #ccc");
+  inputText.style("border-radius", "5px");
+  inputText.style("outline", "none");
+  inputText.style("box-shadow", "0px 0px 5px #ccc");
+}
+
+void mouseWheel(MouseEvent event) {
+  float scrollAmount = event.getCount();
+  float newY = textPosition.y + scrollAmount * 10; // Adjust scrolling speed as needed
+  textPosition.y = constrain(newY, height - messages.size() * messageSpacing + 10, height - 10);
+}

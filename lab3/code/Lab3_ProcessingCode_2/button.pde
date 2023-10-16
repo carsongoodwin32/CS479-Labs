@@ -4,7 +4,7 @@ public class Button {
     int keyCode;
     float x;
     float y;
-
+    String description;
     public Button(){
         this.name = "";
         this.iconLocation = ".";
@@ -19,16 +19,26 @@ public class Button {
         this.x = x;
         this.y = y;
     }
+    public Button(String name, String iconLocation, int keyCode, float x, float y,String description){
+        this.name = name;
+        this.iconLocation = iconLocation;
+        this.keyCode = keyCode;
+        this.x = x;
+        this.y = y;
+        this.description = description;
+    }
 
     public String getName() {return name;}
     public String getIconLocation() {return iconLocation;}
     public int getKeyCode() {return keyCode;}
     public float getX() {return x;}
     public float getY() {return y;}
+    public String getDesc() {return description;}
 
     public void setName(String name) {this.name = name;}
     public void setIconLocation(String iconLocation) {this.iconLocation = iconLocation;}
     public void setKeyCode(int keyCode) {this.keyCode = keyCode;}
     public void setX(float x) {this.x = x;}
     public void setY(float y) {this.y = y;}
+    public void setDesc(String desc) {this.description = desc;}
 }

@@ -1,0 +1,43 @@
+Button button;
+boolean pythonScriptRunning = false;
+
+void setup() {
+  size(400, 200);
+  button = new Button("Run Python Script");
+  button.setPosition(150, 100);
+  button.setSize(100, 40);
+  button.addActionListener(new ActionListener() {
+    public void actionPerformed(ActionEvent e) {
+      if (!pythonScriptRunning) {
+        pythonScriptRunning = true;
+        Thread pythonThread = new Thread(new Runnable() {
+          public void run() {
+            launchPythonScript();
+          }
+        });
+        pythonThread.start();
+      }
+    }
+  });
+  add(button);
+}
+
+void draw() {
+  background(220);
+  
+  // You can continue doing other things in Processing here
+}
+
+void launchPythonScript() {
+  // Define the Python script content
+  String pythonScript = "print('Hello from Python!')";
+
+  // Execute the Python script
+  try {
+    Process process = Runtime.getRuntime().exec("python -c \"" + pythonScript + "\"");
+    process.waitFor();
+    pythonScriptRunning = false; // Set the flag to indicate that the script has finished
+  } catch (IOException | InterruptedException e) {
+    e.printStackTrace();
+  }
+}
