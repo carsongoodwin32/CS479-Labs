@@ -1,7 +1,6 @@
 
 PImage plus;  // Declare a PImage variable to hold the plus image
 PImage cross;  // Declare a PImage variable to hold the cross image
-PImage harm;
 
 String nameInput = "";
 String keyCodeInput = "";
@@ -157,7 +156,7 @@ void DrawInterface() {
   // MAIN BUTTONS ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    plus = loadImage("plus.png");
    cross = loadImage("cross.png");
-   harm = loadImage("harm.jpg");
+   //harm = loadImage("harm.jpg");
    
   int numRows = 2;
   int numCols = 3;
@@ -373,12 +372,13 @@ for (int row = 0; row < numCustomBoxesY; row++) {
       }
       catch (Exception e) {
         println("Whoops");
-        PImage iconImage = loadImage("custom"+col+1+".png");
+        PImage iconImage = loadImage("custom"+(col+1)+".png");
         image(iconImage, CustomBoxX, CustomBoxY);
-        float textWidth = textWidth(customButtons[col].name);                         // Calculate the width of the text
-        float textX = CustomBoxX + (customBoxDimension - textWidth) / 2; // Center the text horizontally
-        float textY = CustomBoxY + customBoxDimension / 2;               // Center the text vertically
-        text(customButtons[col].name, textX, textY);
+        customButtons[col].iconLocation = "custom"+(col+1)+".png";
+        //float textWidth = textWidth(customButtons[col].name);                         // Calculate the width of the text
+        //float textX = CustomBoxX + (customBoxDimension - textWidth) / 2; // Center the text horizontally
+        //float textY = CustomBoxY + customBoxDimension / 2;               // Center the text vertically
+        //text(customButtons[col].name, textX, textY);
       }
     }else{
     float textWidth = textWidth(customButtons[col].name);                         // Calculate the width of the text
