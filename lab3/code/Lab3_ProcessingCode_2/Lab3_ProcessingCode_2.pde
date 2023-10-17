@@ -14,8 +14,8 @@ boolean[] pinStates = new boolean[6];
 
 void setup() {
   size(1400, 900);
-   //String portName = Serial.list()[0];
-   myPort = new Serial(this, "/dev/ttys006", 115200);
+   String portName = Serial.list()[0];
+   myPort = new Serial(this, portName, 115200);
    myPort.bufferUntil('\n');
    try { 
      robot = new Robot();

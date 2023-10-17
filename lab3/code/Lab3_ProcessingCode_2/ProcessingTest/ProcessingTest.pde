@@ -14,7 +14,7 @@ boolean integrationStarted = false;
 
 void setup() {
   size(400, 300);
-  serialPort = new Serial(this, "/dev/ttys006", 9600);
+  serialPort = new Serial(this, "/dev/ttys001", 9600);
   serialPort.bufferUntil('\n');
   
   createGUI();

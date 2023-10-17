@@ -7,7 +7,7 @@ import asyncio, csv
 import serial
 import time
 
-serial_port = serial.Serial('/dev/ttys010', 9600)
+serial_port = serial.Serial('/dev/ttys002', 9600)
 # Replace these with your Client ID and OAuth token
 APP_ID = 'p80mbph3wdhr6kqs2ic7gib68xd2cf'
 APP_SECRET = 'gayq3ewwzrktbifk2wadhedjmu54xw'

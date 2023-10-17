@@ -381,10 +381,17 @@ for (int row = 0; row < numCustomBoxesY; row++) {
         //text(customButtons[col].name, textX, textY);
       }
     }else{
-    float textWidth = textWidth(customButtons[col].name);                         // Calculate the width of the text
-    float textX = CustomBoxX + (customBoxDimension - textWidth) / 2; // Center the text horizontally
-    float textY = CustomBoxY + customBoxDimension / 2;               // Center the text vertically
-    text(customButtons[col].name, textX, textY);
+       if(customSets[col] != 0){
+        PImage iconImage = loadImage("custom"+(col+1)+".png");
+        image(iconImage, CustomBoxX, CustomBoxY);
+        customButtons[col].iconLocation = "custom"+(col+1)+".png";
+       }
+       else{
+        float textWidth = textWidth(customButtons[col].name);                         // Calculate the width of the text
+        float textX = CustomBoxX + (customBoxDimension - textWidth) / 2; // Center the text horizontally
+        float textY = CustomBoxY + customBoxDimension / 2;               // Center the text vertically
+        text(customButtons[col].name, textX, textY);
+       }
     }
     
   }
