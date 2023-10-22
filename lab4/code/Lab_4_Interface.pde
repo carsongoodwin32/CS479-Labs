@@ -2,8 +2,12 @@ PImage balance; // Declare a PImage variable to hold the arrow image
 PImage foot;
 PImage arrow;
 PImage people; 
-
+PImage footContour;
 boolean balanceMode = false; 
+boolean tiltMode = false;
+
+float rot = 10; 
+
 
 void DrawInterface() {
   fill(255);
@@ -52,10 +56,56 @@ void DrawInterface() {
   
  //-------------------------------------------------------------------------  Heatmap -----------------------------------------
   
-   // Draw a big rectangle in the left part of the interface
-  fill(255); // Change the fill color for the rectangle
-  rect(35, 125, 525, 700); // Draw a big rectangle on the left part
-  
+
+    // Draw a big rectangle in the left part of the interface
+    fill(255); // Change the fill color for the rectangle
+    rect(35, 125, 525, 700); // Draw a big rectangle on the left part
+    PImage footContour = loadImage("footContour.jpg");
+    float xi = 35 + (525 - 700/2) / 2;
+    float yi = 125 + (700 - 680) / 2;
+    
+      
+    if (!tiltMode) {
+      image(footContour, xi, yi, 700/2, 680);
+    }
+    
+    if (tiltMode) {
+      pushMatrix();
+      translate(xi + 700/4, yi + 680/2); // Translate to the center of the image
+      rotate(radians(rot)); // Rotate by the global 'rot' angle in degrees
+      image(footContour, -700/4, -680/2, 700/2, 680);
+    
+      // Calculate the center of the rotated image
+      float centerX = 0;
+      float centerY = 0;
+    
+      // Draw new X and Y axes aligned with the center of the image, longer than the image
+      stroke(4);
+      fill(0);
+      float axisLength = 700; // Length of the axes longer than the image
+      float axisxLength = 700/2; // Length of the axes matching the image
+      line(centerX - axisxLength/2, centerY, centerX + axisxLength/2, centerY); // New X-axis
+      line(centerX, centerY - axisLength/2, centerX, centerY + axisLength/2); // New Y-axis
+      popMatrix();
+      
+      pushMatrix();
+      noFill();
+      arc(35 + 525/2, 125 + 700/2, 150 * 2, 150 * 2, -HALF_PI, -HALF_PI +  radians(rot));
+      popMatrix();
+      
+      
+      // Display the number of radians of tilting
+      fill(0);
+      text("Angle: " + nf(rot, 0, 2) + " rad", 320,400);
+    }
+    
+    // Draw original X and Y axes
+    stroke(4);
+    fill(0);
+    line(35 + 525/2, 125, 35 + 525/2, 125 + 700); // Original X-axis
+    line(35, 125 + 700/2, 35 + 525, 125 + 700/2); // Original Y-axis
+    
+
  //-------------------------------------------------------------------------  2 squares -----------------------------------------  
   
   float littleSquareSize = 100; // Size of the little squares
@@ -137,5 +187,11 @@ void mousePressed() {
   if (mouseX >= x3 && mouseX <= x3 + otherLittleSquareSize && mouseY >= y4 && mouseY <= y4 + otherLittleSquareSize) {
     println("Clicked on the second icon (foot).");
     // Add your action for the second icon here
+        if(!tiltMode){
+      tiltMode = true;
+    } 
+    else if(tiltMode){
+      tiltMode=false;
+    }
   }
 }
