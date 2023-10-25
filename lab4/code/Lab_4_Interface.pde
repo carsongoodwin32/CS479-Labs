@@ -2,10 +2,12 @@ PImage balance; // Declare a PImage variable to hold the arrow image
 PImage foot;
 PImage arrow;
 PImage people; 
-PImage footContour;
+PImage footContour_1;
+PImage footContour_2;
+PImage mirror;
 boolean balanceMode = false; 
 boolean tiltMode = false;
-
+boolean mirrorMode = false;
 float rot = 10; 
 
 
@@ -42,8 +44,11 @@ void DrawInterface() {
       for (int col = 0; col < 2; col++) {
         float x = 650 + col * (squareSize + spacing); // Adjust the x-coordinate for each square
         float y = 125 + row * (squareSize + spacing); // Adjust the y-coordinate for each square
-        fill(255); // Set the fill color to white
-        rect(x, y, squareSize, squareSize); // Draw a white square at (x, y) with a width and height of squareSize
+        pushMatrix();
+          fill(255); // Set the fill color to white
+          stroke(0);
+          rect(x, y, squareSize, squareSize); // Draw a white square at (x, y) with a width and height of squareSize
+        popMatrix();
       }
     }
   } else {
@@ -60,20 +65,32 @@ void DrawInterface() {
     // Draw a big rectangle in the left part of the interface
     fill(255); // Change the fill color for the rectangle
     rect(35, 125, 525, 700); // Draw a big rectangle on the left part
-    PImage footContour = loadImage("footContour.jpg");
+    PImage footContour_1 = loadImage("footContour_1.jpg");
+    PImage footContour_2 = loadImage("footContour_2.jpg");
     float xi = 35 + (525 - 700/2) / 2;
     float yi = 125 + (700 - 680) / 2;
     
       
     if (!tiltMode) {
-      image(footContour, xi, yi, 700/2, 680);
+      if (!mirrorMode){
+        image(footContour_1, xi, yi, 700/2, 680);
+      }else if (mirrorMode){
+        image(footContour_2, xi, yi, 700/2, 680);
+      }
     }
     
     if (tiltMode) {
       pushMatrix();
       translate(xi + 700/4, yi + 680/2); // Translate to the center of the image
       rotate(radians(rot)); // Rotate by the global 'rot' angle in degrees
-      image(footContour, -700/4, -680/2, 700/2, 680);
+      
+      if (!mirrorMode){
+         image(footContour_1, -700/4, -680/2, 700/2, 680);
+      }else if (mirrorMode){
+         image(footContour_2, -700/4, -680/2, 700/2, 680);
+      }
+      
+     
     
       // Calculate the center of the rotated image
       float centerX = 0;
@@ -151,6 +168,10 @@ void DrawInterface() {
   // Load the image and assign it to the PImage variable
   balance = loadImage("balance.png");
   arrow =   loadImage("arrow.png");
+  mirror=   loadImage("mirror.png");
+  
+  image (mirror,560,745,otherLittleSquareSize/1.2,otherLittleSquareSize/1.2);
+  
   if (!balanceMode){
   image(balance, x3, y3, otherLittleSquareSize, otherLittleSquareSize); 
   }
@@ -192,6 +213,19 @@ void mousePressed() {
     } 
     else if(tiltMode){
       tiltMode=false;
+    }
+  }
+   // Check if the mouse click is inside the bounds of the second icon
+  if (mouseX >= 560 && mouseX <= 560 + otherLittleSquareSize && mouseY >= 745 && mouseY <= 745 + otherLittleSquareSize) {
+    
+    // Add your action for the second icon here
+    if(!mirrorMode){
+      mirrorMode = true;
+      println("True");
+    } 
+    else if(mirrorMode){
+      mirrorMode=false;
+      println("False");
     }
   }
 }
