@@ -5,7 +5,7 @@ import org.gicentre.utils.stat.AbstractChart;
 Serial myPort;
 int[] FSRVector = new int[4];
 float gyro;
-ArrayList<Float> calibrationVector = new ArrayList<>();
+ArrayList<Float> calibrationVector = new ArrayList<>();   
 float [] acc = new float [4];
 
 int currentIndex = 0;
@@ -69,10 +69,13 @@ void serialEvent(Serial myPort) {
        FSR3Vector.add(FSRVector[2]);
        FSR4Vector.add(FSRVector[3]);
      }
-     if (!rec && flagSave ==0){
+     if (!rec && flagSave ==0 && MFP.size()>0){
        //function that save 
-       // function that calculate the MFP 
-       
+      MFP_calculator();
+      averageForMFP();
+      SaveTxT();
+      print(MFP);
+      flagSave=1;
      }
    }
  graph_serialEvent();

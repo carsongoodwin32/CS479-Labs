@@ -275,8 +275,14 @@ void mousePressed() {
     if(!rec){
       rec = true;
       flagSave = 0; 
+      AvgMFP = 0; 
       println("recording active");
       startTime = millis();
+      FSR1Vector = new ArrayList<>();
+      FSR2Vector = new ArrayList<>();
+      FSR3Vector = new ArrayList<>();
+      FSR4Vector = new ArrayList<>();
+      MFP = new ArrayList<>();
     } 
   }
      if (mouseX >= 50 && mouseX <= 50 + otherLittleSquareSize/1.8 && mouseY >= 840 && mouseY <= 840 + otherLittleSquareSize/1.8) {
@@ -285,9 +291,10 @@ void mousePressed() {
     if(!calibration){
       calibration = true;
       flag = 0;
-        println("calibration active");
+      println("calibration active");
       AvgCalibration =0;
+      calibrationVector = new ArrayList<>();
       startTime_Cali = millis();
-    } 
+    }  
   }
 }
