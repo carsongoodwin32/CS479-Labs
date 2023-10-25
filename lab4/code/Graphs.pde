@@ -19,8 +19,9 @@ int count =0;
 
 
 void graph_setup() {
+  
   //0 
-  lineChart = new XYChart(this);
+  lineChart  = new XYChart(this);
   lineChartX = new FloatList();
   lineChartY = new FloatList();
   lineChart.setData(lineChartX.array(), lineChartY.array());
@@ -31,11 +32,11 @@ void graph_setup() {
   lineChart.setXFormat("0");
   lineChart.setPointSize(5);
   lineChart.setLineWidth(2);
-  
-  // Add labels to lineChart
+  textSize(12);
   lineChart.setXAxisLabel("Time [s]");
   lineChart.setYAxisLabel("Pressure [Pa]");
 
+  
   // 2 
   lineChart_2 = new XYChart(this);
   lineChartX_2 = new FloatList();
@@ -48,12 +49,11 @@ void graph_setup() {
   lineChart_2.setXFormat("0");
   lineChart_2.setPointSize(5);
   lineChart_2.setLineWidth(2);
-  
-  // Add labels to lineChart
+  textSize(12);
   lineChart_2.setXAxisLabel("Time [s]");
   lineChart_2.setYAxisLabel("Pressure [Pa]");
 
-  
+
   //3
   lineChart_3 = new XYChart(this);
   lineChartX_3 = new FloatList();
@@ -66,8 +66,7 @@ void graph_setup() {
   lineChart_3.setXFormat("0");
   lineChart_3.setPointSize(5);
   lineChart_3.setLineWidth(2);
-  
-   // Add labels to lineChart
+  textSize(12);
   lineChart_3.setXAxisLabel("Time [s]");
   lineChart_3.setYAxisLabel("Pressure [Pa]");
   
@@ -83,8 +82,7 @@ void graph_setup() {
   lineChart_4.setXFormat("0");
   lineChart_4.setPointSize(5);
   lineChart_4.setLineWidth(2);
-  
-  // Add labels to lineChart
+  textSize(12);
   lineChart_4.setXAxisLabel("Time [s]");
   lineChart_4.setYAxisLabel("Pressure [Pa]");
   
@@ -95,53 +93,35 @@ void graph_setup() {
 
 
 void graph_draw() {
-  // Draw the top-left square
-  float x = 650; // X-coordinate of the top-left square
-  float y = 125; // Y-coordinate of the top-left square
-  float spacing = 20; // Adjust the spacing between squares
-  float squareSize = 1.60 * (400 - (3 * spacing)) / 2; // Use the same squareSize calculation as before
+  float x = 650;
+  float y = 125;
+  float spacing = 20;
+  float squareSize = 1.60 * (400 - (3 * spacing)) / 2;
 
-  // Draw the top-left square
-  fill(255); // Set the fill color to white
-  rect(x, y, squareSize, squareSize);
-
-  // Calculate the coordinates for the X and Y axes
-  float xAxisX1 = x; // Start of X-axis
-  float xAxisY1 = y + squareSize / 1.1; // Midpoint of the square for X-axis
-  float xAxisX2 = x + squareSize; // End of X-axis
-  float xAxisY2 = xAxisY1;
-
-  float yAxisX1 = x + squareSize / 10; // Midpoint of the square for Y-axis
+  float xAxisX1 = x;
+  float xAxisX2 = x + squareSize;
+ 
   float yAxisY1 = y;
-  float yAxisX2 = yAxisX1;
   float yAxisY2 = y + squareSize;
 
-  // Adjust the coordinates for lineChart_2
-  float lineChartX = xAxisX1;
-  float lineChartY = yAxisY1;
-  float lineChartWidth = squareSize;
-  float lineChartHeight = squareSize;
-
-  // Draw the line chart and set its color
-  lineChart.draw(lineChartX+5, lineChartY+2, lineChartWidth, lineChartHeight);
+  lineChart.draw(xAxisX1, yAxisY1, squareSize, squareSize);
   lineChart.setAxisColour(0);
-  
-  // Add a grid
-  stroke(200); // Set the stroke color to a light gray
+
+  stroke(0);
   strokeWeight(1);
 
-  // Draw horizontal grid lines
   for (float gridY = y + squareSize / 4; gridY < yAxisY2; gridY += squareSize / 4) {
-    line(x + squareSize / 10, gridY, x + squareSize, gridY);
+    line(12+x + squareSize / 10, gridY, x + squareSize-10, gridY);
   }
 
-  // Draw vertical grid lines
   for (float gridX = x + squareSize / 4; gridX < xAxisX2; gridX += squareSize / 4) {
-    line(gridX,y+20, gridX, yAxisY2-25);
+    line(gridX, y + 10, gridX, yAxisY2 - 45);
   }
-  
-  text("Antero - Lateral Pressure Sensor", x+50, y+15); // Draw the rotated label
+  textSize(14);
+  text("Antero - Lateral Pressure Sensor", x + 50, y + 15);  
 }
+
+
 
 void graph_draw_2() {
   // Draw the top-left square
@@ -151,47 +131,27 @@ void graph_draw_2() {
   float x = 650 + 1 * (squareSize + spacing); // Adjust the x-coordinate for each square
   float y = 125 + 0 * (squareSize + spacing); 
   
-  // Draw the top-left square
-  fill(255); // Set the fill color to white
-  rect(x, y, squareSize, squareSize);
-
-  // Calculate the coordinates for the X and Y axes
-  float xAxisX1 = x; // Start of X-axis
-  float xAxisY1 = y + squareSize / 1.1; // Midpoint of the square for X-axis
-  float xAxisX2 = x + squareSize; // End of X-axis
-  float xAxisY2 = xAxisY1;
-
-  float yAxisX1 = x + squareSize / 10; // Midpoint of the square for Y-axis
+  
+  float xAxisX1 = x;
+  float xAxisX2 = x + squareSize;
+ 
   float yAxisY1 = y;
-  float yAxisX2 = yAxisX1;
   float yAxisY2 = y + squareSize;
-  
-  // Adjust the coordinates for lineChart_2
-  float lineChartX = xAxisX1;
-  float lineChartY = yAxisY1;
-  float lineChartWidth = squareSize;
-  float lineChartHeight = squareSize;
 
-  // Draw the line chart and set its color
-  stroke(255);
-  lineChart_2.draw(lineChartX+5, lineChartY+2, lineChartWidth, lineChartHeight);
+  lineChart_2.draw(xAxisX1, yAxisY1, squareSize, squareSize);
   lineChart_2.setAxisColour(0);
-  
 
-  // Add a grid
-  stroke(200); // Set the stroke color to a light gray
+  stroke(0);
   strokeWeight(1);
 
-  // Draw horizontal grid lines
   for (float gridY = y + squareSize / 4; gridY < yAxisY2; gridY += squareSize / 4) {
-    line(x + squareSize / 10, gridY, x + squareSize, gridY);
+    line(12+x + squareSize / 10, gridY, x + squareSize-10, gridY);
   }
 
-  // Draw vertical grid lines
   for (float gridX = x + squareSize / 4; gridX < xAxisX2; gridX += squareSize / 4) {
-    line(gridX,y+20, gridX, yAxisY2-25);
+    line(gridX, y + 10, gridX, yAxisY2 - 45);
   }
-  
+  textSize(14);
   text("Antero - Medial Pressure Sensor", x+50, y+15); // Draw the rotated label
 }
 
@@ -203,48 +163,28 @@ void graph_draw_3() {
   float x = 650 + 0 * (squareSize + spacing); // Adjust the x-coordinate for each square
   float y = 125 + 1 * (squareSize + spacing); 
   
-  // Draw the top-left square
-  fill(255); // Set the fill color to white
-  rect(x, y, squareSize, squareSize);
 
   // Calculate the coordinates for the X and Y axes
   float xAxisX1 = x; // Start of X-axis
-  float xAxisY1 = y + squareSize / 1.1; // Midpoint of the square for X-axis
   float xAxisX2 = x + squareSize; // End of X-axis
-  float xAxisY2 = xAxisY1;
-
-  float yAxisX1 = x + squareSize / 10; // Midpoint of the square for Y-axis
+  
   float yAxisY1 = y;
-  float yAxisX2 = yAxisX1;
   float yAxisY2 = y + squareSize;
-  
-  
-    // Adjust the coordinates for lineChart_2
-  float lineChartX = xAxisX1;
-  float lineChartY = yAxisY1;
-  float lineChartWidth = squareSize;
-  float lineChartHeight = squareSize;
+   
+  lineChart_2.draw(xAxisX1, yAxisY1, squareSize, squareSize);
+  lineChart_2.setAxisColour(0);
 
-  // Draw the line chart and set its color
-  stroke(255);
-  lineChart_3.draw(lineChartX+5, lineChartY+2, lineChartWidth, lineChartHeight);
-  lineChart_3.setAxisColour(0);
-  
- 
-  // Add a grid
-  stroke(200); // Set the stroke color to a light gray
+  stroke(0);
   strokeWeight(1);
 
-  // Draw horizontal grid lines
   for (float gridY = y + squareSize / 4; gridY < yAxisY2; gridY += squareSize / 4) {
-    line(x + squareSize / 10, gridY, x + squareSize, gridY);
+    line(12+x + squareSize / 10, gridY, x + squareSize-10, gridY);
   }
 
-  // Draw vertical grid lines
   for (float gridX = x + squareSize / 4; gridX < xAxisX2; gridX += squareSize / 4) {
-    line(gridX,y+20, gridX, yAxisY2-25);
+    line(gridX, y + 10, gridX, yAxisY2 - 45);
   }
-  
+  textSize(14);
   text("Center - Medial Pressure Sensor", x+50, y+15); // Draw the rotated label
 }
 
@@ -253,103 +193,73 @@ void graph_draw_4() {
   // Draw the top-left square
   float spacing = 20; // Adjust the spacing between squares
   float squareSize = 1.60 * (400 - (3 * spacing)) / 2; // Use the same squareSize calculation as before
-
   float x = 650 + 1 * (squareSize + spacing); // Adjust the x-coordinate for each square
   float y = 125 + 1 * (squareSize + spacing); 
   
-  // Draw the top-left square
-  fill(255); // Set the fill color to white
-  rect(x, y, squareSize, squareSize);
-
+  
   // Calculate the coordinates for the X and Y axes
   float xAxisX1 = x; // Start of X-axis
-  float xAxisY1 = y + squareSize / 1.1; // Midpoint of the square for X-axis
   float xAxisX2 = x + squareSize; // End of X-axis
-  float xAxisY2 = xAxisY1;
-
-  float yAxisX1 = x + squareSize / 10; // Midpoint of the square for Y-axis
   float yAxisY1 = y;
-  float yAxisX2 = yAxisX1;
   float yAxisY2 = y + squareSize;
 
-  // Adjust the coordinates for lineChart_2
-  float lineChartX = xAxisX1;
-  float lineChartY = yAxisY1;
-  float lineChartWidth = squareSize;
-  float lineChartHeight = squareSize;
+  lineChart_2.draw(xAxisX1, yAxisY1, squareSize, squareSize);
+  lineChart_2.setAxisColour(0);
 
-  // Draw the line chart and set its color
   stroke(0);
-  lineChart_4.draw(lineChartX+5, lineChartY+2, lineChartWidth, lineChartHeight);
-  lineChart_4.setAxisColour(0);
-  
-  // Add a grid
-  stroke(200); // Set the stroke color to a light gray
   strokeWeight(1);
 
-  // Draw horizontal grid lines
   for (float gridY = y + squareSize / 4; gridY < yAxisY2; gridY += squareSize / 4) {
-    line(x + squareSize / 10, gridY, x + squareSize, gridY);
+    line(12+x + squareSize / 10, gridY, x + squareSize-10, gridY);
   }
 
-  // Draw vertical grid lines
   for (float gridX = x + squareSize / 4; gridX < xAxisX2; gridX += squareSize / 4) {
-    line(gridX,y+20, gridX, yAxisY2-25);
+    line(gridX, y + 10, gridX, yAxisY2 - 45);
   }
-  
+  textSize(14);
   text("Posterior Pressure Sensor", x+50, y+15); // Draw the rotated label
 }
 
 
 
-// SERIAL EVENTS 
-void graph_serialEvent(int val , int val_2 , int val_3, int val_4) {
+//// SERIAL EVENTS 
+void graph_serialEvent(int val ) {
   count++;
   
   //0
   lineChartX.append(count);
-  print(count);
   lineChartY.append(val); 
-  print(val);
   if (lineChartX.size() > 100 && lineChartY.size() > 100) {
       lineChartX.remove(0);
       lineChartY.remove(0);
   }
   lineChart.setData(lineChartX.array(), lineChartY.array());
   
-  
+
   //2 
   lineChartX_2.append(count);
-  print(count);
-  lineChartY_2.append(val_2); 
-  print(val);
+  lineChartY_2.append(val); 
   if (lineChartX_2.size() > 100 && lineChartY_2.size() > 100) {
     lineChartX_2.remove(0);
     lineChartY_2.remove(0);
   }
   lineChart_2.setData(lineChartX_2.array(), lineChartY_2.array());
-  
+
   //3
   lineChartX_3.append(count);
-  print(count);
-  lineChartY_3.append(val_3); 
-  print(val);
+  lineChartY_3.append(val); 
   if (lineChartX_3.size() > 100 && lineChartY_3.size() > 100) {
       lineChartX_3.remove(0);
       lineChartY_3.remove(0);
   }
   lineChart_3.setData(lineChartX_3.array(), lineChartY_3.array());
   
-  
   //4 
   lineChartX_4.append(count);
-  print(count);
-  lineChartY_4.append(val_4); 
-  print(val);
+  lineChartY_4.append(val); 
   if (lineChartX_4.size() > 100 && lineChartY_4.size() > 100) {
     lineChartX_4.remove(0);
     lineChartY_4.remove(0);
   }
   lineChart_4.setData(lineChartX_4.array(), lineChartY_4.array());
-  
-}
+}  
