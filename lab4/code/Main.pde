@@ -21,8 +21,8 @@ void draw() {
   graph_draw_2();
   graph_draw_3();
   graph_draw_4();
-  draw_pressure_graph();
   }
+  draw_pressure_graph();
   //graph_serialEvent(FSRVector[1]);
 }
 

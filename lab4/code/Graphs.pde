@@ -264,19 +264,21 @@ void graph_draw_4() {
   text("Posterior Pressure Sensor", x+50, y+15); // Draw the rotated label
 }
 
-void draw_pressure_graph(){
+void draw_pressure_graph() {
   // Map sensor values to colors and create the heatmap effect
-  int[] x = {100,200,300,400};
-  int[] y = {100,200,300,400};
+  stroke(0); // Set the stroke color to a light gray
+  int[] x = {200, 280, 375, 240};//get offsets from center of image
+  int[] y = {375, 725, 475, 560};//get offsets from center of image
   for (int i = 0; i < 4; i++) {
-    
+
     for (int j = 10; j > 0; j--) {
       float sizeFactor = map(j, 0, 10, 0, FSRVector[i]);
-      float mappedValue = map(FSRVector[i], 0, 1000, 0, j*80);
+      float mappedValue = map(FSRVector[i], 0, 1000, 0, j * 80);
       colorMode(HSB, 1000);
-      fill(1000-mappedValue, 1000-mappedValue, 1000-mappedValue); // Invert the color mapping
-      ellipse(x[i], y[i], sizeFactor/4, sizeFactor/4);
+      int transparency = 200; // Adjust the alpha value as needed (0-255)
+      fill(1000 - mappedValue, 1000 - mappedValue, 1000 - mappedValue, transparency);
+      ellipse(x[i], y[i], sizeFactor / 4, sizeFactor / 4);
     }
-    colorMode(RGB,255);
+    colorMode(RGB, 255);
   }
 }
