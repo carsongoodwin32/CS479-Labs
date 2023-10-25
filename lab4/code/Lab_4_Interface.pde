@@ -5,6 +5,7 @@ PImage people;
 PImage footContour_1;
 PImage footContour_2;
 PImage mirror;
+PImage record;
 boolean balanceMode = false; 
 boolean tiltMode = false;
 boolean mirrorMode = false;
@@ -137,13 +138,12 @@ void DrawInterface() {
   rect(x1, y, 2*littleSquareSize, littleSquareSize);
   rect(x2, y, 2*littleSquareSize, littleSquareSize);
   
-  
+  //---------first text 
   // Calculate the position for the text based on the square's position
   float textX = x1 + littleSquareSize  - textWidth("#Step/Min") / 2; // Adjust based on the title text
   float textY = y + littleSquareSize / 2 + 5; // Adjust for vertical alignment
   fill(0); // Set the fill color to black
   text("#Step/Min", textX, textY-30); // Draw the centered title text
-
   // Display the number 50 centered in the same way
   textSize(20);
   String number = "50";
@@ -152,6 +152,23 @@ void DrawInterface() {
   float numberY = y + littleSquareSize / 2 + 20; // Adjust for vertical alignment
   text(number, numberX, numberY); // Draw the centered number
 
+  //------ second test 
+  
+  if (rec){
+    // Calculate the position for the text based on the square's position
+    float textX1 = x2 + littleSquareSize  - textWidth("#Step/Min") / 2; // Adjust based on the title text
+    float textY1 = y + littleSquareSize / 2 + 5; // Adjust for vertical alignment
+    fill(0); // Set the fill color to black
+    text("Recording...", textX1, textY1-30); // Draw the centered title text
+    remainingTime = (30000 - (millis() - startTime))*0.001;
+    text(remainingTime, textX1, numberY); // Draw the centered number
+    if(remainingTime<0){
+      rec = false;
+      remainingTime=0;
+    }
+  }
+  
+  
   
   //-------------------------------------------------------------------------  2 icons  -----------------------------------------   
   
@@ -162,13 +179,14 @@ void DrawInterface() {
   float y3 = 125; // X-coordinate of the first other little square
   float y4 = y3 + otherLittleSquareSize + spaceBetweenOtherLittleSquares; // X-coordinate of the second other little square
   float x3 = 1250;   // Y-coordinate for both other little squares
-
+  float y5 = y3 + (otherLittleSquareSize + spaceBetweenOtherLittleSquares)*2;
  
   
   // Load the image and assign it to the PImage variable
   balance = loadImage("balance.png");
   arrow =   loadImage("arrow.png");
   mirror=   loadImage("mirror.png");
+  record=   loadImage("record.png");
   
   image (mirror,560,745,otherLittleSquareSize/1.2,otherLittleSquareSize/1.2);
   
@@ -180,6 +198,13 @@ void DrawInterface() {
   }
   foot = loadImage("foot.png");
   image(foot, x3, y4, otherLittleSquareSize, otherLittleSquareSize); 
+  
+  if (tiltMode){  
+  image(record, x3, y5, otherLittleSquareSize, otherLittleSquareSize); 
+  }
+  
+  
+  
 }
 
 
@@ -193,6 +218,8 @@ void mousePressed() {
   float y3 = 125; // X-coordinate of the first other little square
   float y4 = y3 + otherLittleSquareSize + spaceBetweenOtherLittleSquares; // X-coordinate of the second other little square
   float x3 = 1250;   // Y-coordinate for both other little squares
+  float y5 = y3 + (otherLittleSquareSize + spaceBetweenOtherLittleSquares)*2;
+ 
   // Check if the mouse click is inside the bounds of the first icon
   if (mouseX >= x3 && mouseX <= x3 + otherLittleSquareSize && mouseY >= y3 && mouseY <= y3 + otherLittleSquareSize) {
     println("Clicked on balance icon.");
@@ -215,7 +242,7 @@ void mousePressed() {
       tiltMode=false;
     }
   }
-   // Check if the mouse click is inside the bounds of the second icon
+   // Check if the mouse click is inside the bounds of the third icon
   if (mouseX >= 560 && mouseX <= 560 + otherLittleSquareSize && mouseY >= 745 && mouseY <= 745 + otherLittleSquareSize) {
     
     // Add your action for the second icon here
@@ -227,5 +254,13 @@ void mousePressed() {
       mirrorMode=false;
       println("False");
     }
+  }
+   if (mouseX >= x3 && mouseX <= x3 + otherLittleSquareSize && mouseY >= y5 && mouseY <= y5 + otherLittleSquareSize) {
+    // Add your action for the second icon here
+    if(!rec){
+      rec = true;
+      println("True");
+      startTime = millis();
+    } 
   }
 }
