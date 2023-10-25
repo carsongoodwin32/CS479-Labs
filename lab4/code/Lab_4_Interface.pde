@@ -6,12 +6,15 @@ PImage footContour_1;
 PImage footContour_2;
 PImage mirror;
 PImage record;
+PImage cali; 
 boolean balanceMode = false; 
 boolean tiltMode = false;
 boolean mirrorMode = false;
+boolean calibration = false; 
 float rot = 10; 
-
-
+float startTime_Cali=0;
+float remainingTime_cali = 0;
+ 
 void DrawInterface() {
   fill(255);
   rect(-1, -1, 1401, 901);
@@ -187,8 +190,20 @@ void DrawInterface() {
   arrow =   loadImage("arrow.png");
   mirror=   loadImage("mirror.png");
   record=   loadImage("record.png");
-  
+  cali =    loadImage("calibration.png");
   image (mirror,560,745,otherLittleSquareSize/1.2,otherLittleSquareSize/1.2);
+  image (cali,  50,840,otherLittleSquareSize/1.8,otherLittleSquareSize/1.8);
+  text("Calibration", 120, 870);
+  
+  if (calibration){
+  remainingTime_cali = (4000 - (millis() - startTime_Cali))*0.001;
+    text(remainingTime_cali, 220, 870); // Draw the centered number
+    if(remainingTime_cali<0){
+      calibration = false;
+      remainingTime_cali=0;
+    }
+  }
+  
   
   if (!balanceMode){
   image(balance, x3, y3, otherLittleSquareSize, otherLittleSquareSize); 
@@ -261,6 +276,15 @@ void mousePressed() {
       rec = true;
       println("True");
       startTime = millis();
+    } 
+  }
+     if (mouseX >= 50 && mouseX <= 50 + otherLittleSquareSize/1.8 && mouseY >= 840 && mouseY <= 840 + otherLittleSquareSize/1.8) {
+    // Add your action for the second icon here
+    print("Calibration");
+    if(!calibration){
+      calibration = true;
+      println("True");
+      startTime_Cali = millis();
     } 
   }
 }
