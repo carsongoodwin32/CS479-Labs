@@ -171,8 +171,8 @@ void graph_draw_3() {
   float yAxisY1 = y;
   float yAxisY2 = y + squareSize;
    
-  lineChart_2.draw(xAxisX1, yAxisY1, squareSize, squareSize);
-  lineChart_2.setAxisColour(0);
+  lineChart_3.draw(xAxisX1, yAxisY1, squareSize, squareSize);
+  lineChart_3.setAxisColour(0);
 
   stroke(0);
   strokeWeight(1);
@@ -203,8 +203,8 @@ void graph_draw_4() {
   float yAxisY1 = y;
   float yAxisY2 = y + squareSize;
 
-  lineChart_2.draw(xAxisX1, yAxisY1, squareSize, squareSize);
-  lineChart_2.setAxisColour(0);
+  lineChart_4.draw(xAxisX1, yAxisY1, squareSize, squareSize);
+  lineChart_4.setAxisColour(0);
 
   stroke(0);
   strokeWeight(1);
@@ -223,12 +223,13 @@ void graph_draw_4() {
 
 
 //// SERIAL EVENTS 
-void graph_serialEvent(int val ) {
+void graph_serialEvent() {
   count++;
   
   //0
   lineChartX.append(count);
-  lineChartY.append(val); 
+  lineChartY.append(FSRVector[0]); 
+  print(FSRVector[0]-250);
   if (lineChartX.size() > 100 && lineChartY.size() > 100) {
       lineChartX.remove(0);
       lineChartY.remove(0);
@@ -238,7 +239,8 @@ void graph_serialEvent(int val ) {
 
   //2 
   lineChartX_2.append(count);
-  lineChartY_2.append(val); 
+  lineChartY_2.append(FSRVector[1]);
+  print(FSRVector[1]-350);
   if (lineChartX_2.size() > 100 && lineChartY_2.size() > 100) {
     lineChartX_2.remove(0);
     lineChartY_2.remove(0);
@@ -247,7 +249,8 @@ void graph_serialEvent(int val ) {
 
   //3
   lineChartX_3.append(count);
-  lineChartY_3.append(val); 
+  lineChartY_3.append(FSRVector[2]); 
+  print(FSRVector[2]);
   if (lineChartX_3.size() > 100 && lineChartY_3.size() > 100) {
       lineChartX_3.remove(0);
       lineChartY_3.remove(0);
@@ -256,10 +259,29 @@ void graph_serialEvent(int val ) {
   
   //4 
   lineChartX_4.append(count);
-  lineChartY_4.append(val); 
+  lineChartY_4.append(FSRVector[3]); 
+  print(FSRVector[3]);
   if (lineChartX_4.size() > 100 && lineChartY_4.size() > 100) {
     lineChartX_4.remove(0);
     lineChartY_4.remove(0);
   }
   lineChart_4.setData(lineChartX_4.array(), lineChartY_4.array());
 }  
+void draw_pressure_graph() {
+  // Map sensor values to colors and create the heatmap effect
+  stroke(0); // Set the stroke color to a light gray
+  int[] x = {200, 280, 375, 240};//get offsets from center of image
+  int[] y = {375, 725, 475, 560};//get offsets from center of image
+  for (int i = 0; i < 4; i++) {
+
+    for (int j = 10; j > 0; j--) {
+      float sizeFactor = map(j, 0, 10, 0, FSRVector[i]);
+      float mappedValue = map(FSRVector[i], 0, 1000, 0, j * 80);
+      colorMode(HSB, 1000);
+      int transparency = 200; // Adjust the alpha value as needed (0-255)
+      fill(1000 - mappedValue, 1000 - mappedValue, 1000 - mappedValue, transparency);
+      ellipse(x[i], y[i], sizeFactor / 4, sizeFactor / 4);
+    }
+    colorMode(RGB, 255);
+  }
+}
