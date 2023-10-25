@@ -274,7 +274,8 @@ void mousePressed() {
     // Add your action for the second icon here
     if(!rec){
       rec = true;
-      println("True");
+      flagSave = 0; 
+      println("recording active");
       startTime = millis();
     } 
   }
@@ -283,7 +284,9 @@ void mousePressed() {
     print("Calibration");
     if(!calibration){
       calibration = true;
-      println("True");
+      flag = 0;
+        println("calibration active");
+      AvgCalibration =0;
       startTime_Cali = millis();
     } 
   }

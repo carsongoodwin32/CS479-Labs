@@ -229,7 +229,6 @@ void graph_serialEvent() {
   //0
   lineChartX.append(count);
   lineChartY.append(FSRVector[0]); 
-  print(FSRVector[0]-250);
   if (lineChartX.size() > 100 && lineChartY.size() > 100) {
       lineChartX.remove(0);
       lineChartY.remove(0);
@@ -240,7 +239,6 @@ void graph_serialEvent() {
   //2 
   lineChartX_2.append(count);
   lineChartY_2.append(FSRVector[1]);
-  print(FSRVector[1]-350);
   if (lineChartX_2.size() > 100 && lineChartY_2.size() > 100) {
     lineChartX_2.remove(0);
     lineChartY_2.remove(0);
@@ -250,7 +248,6 @@ void graph_serialEvent() {
   //3
   lineChartX_3.append(count);
   lineChartY_3.append(FSRVector[2]); 
-  print(FSRVector[2]);
   if (lineChartX_3.size() > 100 && lineChartY_3.size() > 100) {
       lineChartX_3.remove(0);
       lineChartY_3.remove(0);
@@ -260,7 +257,6 @@ void graph_serialEvent() {
   //4 
   lineChartX_4.append(count);
   lineChartY_4.append(FSRVector[3]); 
-  print(FSRVector[3]);
   if (lineChartX_4.size() > 100 && lineChartY_4.size() > 100) {
     lineChartX_4.remove(0);
     lineChartY_4.remove(0);

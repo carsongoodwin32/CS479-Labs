@@ -4,9 +4,15 @@ import org.gicentre.utils.stat.AbstractChart;
 
 Serial myPort;
 int[] FSRVector = new int[4];
+float gyro;
+ArrayList<Float> calibrationVector = new ArrayList<>();
+float [] acc = new float [4];
 
 int currentIndex = 0;
 int dataIndex =0;
+int flag = 0; 
+int flagSave = 0; 
+
 
 void setup() {
   String portName = Serial.list()[0];
@@ -34,11 +40,40 @@ void serialEvent(Serial myPort) {
       data = data.trim();
       String[] values = data.split(",");
       
-      if (values.length == 4) {
-        for (int i = 0; i < 4; i++) {
-          FSRVector[i] = int(values[i]);
+      if (values.length == 9) {
+        for (int i = 0; i < 9; i++) {
+          if (i < 4){
+            FSRVector[i] = int(values[i]);
+          }
+          if (i == 4){
+            gyro = float (values [i]);
+          }
+          if (i > 4){
+            acc [i-5] = float(values[i-5]);
+          }
         }
       }
-    }
-    graph_serialEvent();
+      
+      if (calibration){
+         calibrationVector.add(gyro);
+      }
+      if (!calibration &&  calibrationVector.size()>0 && flag ==0 ){
+        averageForCalibration();
+        print(AvgCalibration);
+        flag = 1;
+      }
+         
+     if (rec){
+       FSR1Vector.add(FSRVector[0]);
+       FSR2Vector.add(FSRVector[1]);
+       FSR3Vector.add(FSRVector[2]);
+       FSR4Vector.add(FSRVector[3]);
+     }
+     if (!rec && flagSave ==0){
+       //function that save 
+       // function that calculate the MFP 
+       
+     }
+   }
+ graph_serialEvent();
 }
