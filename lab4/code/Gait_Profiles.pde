@@ -16,6 +16,40 @@ float AvgMFP = 0;
 // after the 30 seconds we display the decision 
 
 void SaveTxT(){
+  String filename = "data" + nf(int(random(100000)), 5) + "_" + year() + nf(month(), 2) + nf(day(), 2) + "_" + nf(hour(), 2) + nf(minute(), 2) + nf(second(), 2) + ".txt";
+  String path = sketchPath("data/" + filename);
+
+  PrintWriter writer = createWriter(path);
+
+  // Write FSR1Vector
+  for (Integer value : FSR1Vector) {
+    writer.println("FSR1Vector - " + value);
+  }
+
+  // Write FSR2Vector
+  for (Integer value : FSR2Vector) {
+    writer.println("FSR2Vector - " + value);
+  }
+
+  // Write FSR3Vector
+  for (Integer value : FSR3Vector) {
+    writer.println("FSR3Vector - " + value);
+  }
+
+  // Write FSR4Vector
+  for (Integer value : FSR4Vector) {
+    writer.println("FSR4Vector - " + value);
+  }
+
+  // Write MFP
+  for (Float value : MFP) {
+    writer.println("MFP - " + value);
+  }
+
+  writer.flush();
+  writer.close();
+
+  println("Data saved to: " + path);
 }
 
 
