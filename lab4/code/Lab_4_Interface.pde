@@ -61,6 +61,30 @@ void DrawInterface() {
     float y = 125; // Adjust the y-coordinate for the covering square
     fill(255); // Set the fill color to white
     rect(x, y, 2 * squareSize + spacing, 2 * squareSize); // Draw a white square covering the four squares
+    
+    float x_c = 650 + squareSize+spacing/2; // Adjust the x-coordinate for the covering square
+    float y_c = 125 +squareSize ; // Adjust the y-coordinate for the covering square
+    float circleSizeBlue = 2 * squareSize/4 + spacing; // Adjust the size of the blue circle
+    float circleSizeRed = circleSizeBlue - 100; // Adjust the size of the red circle
+
+    fill(0, 0, 255); // Set the fill color to blue
+    ellipse(x_c , y_c, circleSizeBlue, circleSizeBlue); // Draw a blue circle
+    
+    fill(255, 0, 0); // Set the fill color to red
+    ellipse(x_c, y_c, circleSizeRed, circleSizeRed); // Draw a red circle on top of the blue one
+    
+    
+    float title_balance_width = textWidth( "Balance Game"); // Get the width of the title text
+
+    // Calculate the position to center the text inside the square
+    float titleX = x + (2 * squareSize + spacing - title_balance_width) / 2;
+    float titleY =150;
+
+    fill(0); // Set the text color to black
+    textSize(20); // Set the text size
+    text("Balance Game", titleX, titleY);
+    
+    text("Try to keep the red cyrcle within the boundary of the blue cyrcle.", x + (2 * squareSize + spacing - textWidth( "Try to keep the red cyrcle within the boundary of the blue cyrcle"))/2, titleY+40);
   }
   
  //-------------------------------------------------------------------------  Heatmap -----------------------------------------
