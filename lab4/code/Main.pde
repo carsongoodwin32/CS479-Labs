@@ -73,6 +73,11 @@ void serialEvent(Serial myPort) {
       }
       if (!calibration &&  calibrationVector_gyro.size()>0) {
         standing_or_motion();
+        
+        if (balanceMode){
+          text("START THE GAME!",800, 400);
+        }
+      
       }
          
      if (rec){

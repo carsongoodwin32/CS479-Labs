@@ -88,6 +88,14 @@ void DrawInterface() {
     text("Balance Game", titleX, titleY);
     
     text("Try to keep the red cyrcle within the boundary of the blue cyrcle.", x + (2 * squareSize + spacing - textWidth( "Try to keep the red cyrcle within the boundary of the blue cyrcle"))/2, titleY+40);
+    
+    cali =     loadImage("calibration.png");
+    image (cali,  675,600,50,50);
+    
+    
+    
+    
+    
   }
   
  //-------------------------------------------------------------------------  Heatmap -----------------------------------------
@@ -338,5 +346,26 @@ void mousePressed() {
       calibrationVector_accz = new ArrayList<>();
       startTime_Cali = millis();
     }  
+  }
+  
+    if (balanceMode){
+      if (mouseX >= 675 && mouseX <= 675 + 50 && mouseY >= 600 && mouseY <= 600 + 50) {
+      // Add your action for the second icon here
+      println("Calibration for the game"); 
+      if(!calibration){
+        calibration = true;
+        flag = 0;
+        println("calibration for the game active");
+        AvgCalibration_gyro =0;
+        AvgCalibration_accx =0;
+        AvgCalibration_accy =0;
+        AvgCalibration_accz =0;
+        calibrationVector_gyro = new ArrayList<>();
+        calibrationVector_accx = new ArrayList<>();
+        calibrationVector_accy = new ArrayList<>();
+        calibrationVector_accz = new ArrayList<>();
+        startTime_Cali = millis();
+      }
+    }
   }
 }
