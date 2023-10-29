@@ -71,6 +71,9 @@ void serialEvent(Serial myPort) {
         print(AvgCalibration_accz);
         flag = 1;
       }
+      if (!calibration &&  calibrationVector_gyro.size()>0) {
+        standing_or_motion();
+      }
          
      if (rec){
        FSR1Vector.add(FSRVector[0]);
@@ -86,6 +89,7 @@ void serialEvent(Serial myPort) {
       print(MFP);
       flagSave=1;
      }
+     
    }
  graph_serialEvent();
 }
