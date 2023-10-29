@@ -7,6 +7,9 @@ PImage footContour_2;
 PImage mirror;
 PImage record;
 PImage cali; 
+PImage standing;
+PImage motion;
+
 boolean balanceMode = false; 
 boolean tiltMode = false;
 boolean mirrorMode = false;
@@ -211,10 +214,19 @@ void DrawInterface() {
   
   // Load the image and assign it to the PImage variable
   balance = loadImage("balance.png");
-  arrow =   loadImage("arrow.png");
-  mirror=   loadImage("mirror.png");
-  record=   loadImage("record.png");
-  cali =    loadImage("calibration.png");
+  arrow =    loadImage("arrow.png");
+  mirror=    loadImage("mirror.png");
+  record=    loadImage("record.png");
+  cali =     loadImage("calibration.png");
+  motion=    loadImage("motion.jpg");
+  standing = loadImage("Standing.png");
+  if (!still){
+    image(motion,x3,700,otherLittleSquareSize,otherLittleSquareSize);
+    text("Motion" , x3+20,720 + otherLittleSquareSize);
+  }else if(still){
+    image(standing,x3,700,otherLittleSquareSize,otherLittleSquareSize);
+    text("Standing Still" , x3,720 + otherLittleSquareSize);
+  }
   image (mirror,560,745,otherLittleSquareSize/1.2,otherLittleSquareSize/1.2);
   image (cali,  50,840,otherLittleSquareSize/1.8,otherLittleSquareSize/1.8);
   text("Calibration", 120, 870);
@@ -316,8 +328,14 @@ void mousePressed() {
       calibration = true;
       flag = 0;
       println("calibration active");
-      AvgCalibration =0;
-      calibrationVector = new ArrayList<>();
+      AvgCalibration_gyro =0;
+      AvgCalibration_accx =0;
+      AvgCalibration_accy =0;
+      AvgCalibration_accz =0;
+      calibrationVector_gyro = new ArrayList<>();
+      calibrationVector_accx = new ArrayList<>();
+      calibrationVector_accy = new ArrayList<>();
+      calibrationVector_accz = new ArrayList<>();
       startTime_Cali = millis();
     }  
   }

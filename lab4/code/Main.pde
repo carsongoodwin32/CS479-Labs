@@ -5,9 +5,12 @@ import org.gicentre.utils.stat.AbstractChart;
 Serial myPort;
 int[] FSRVector = new int[4];
 float gyro;
-ArrayList<Float> calibrationVector = new ArrayList<>();   
-float [] acc = new float [4];
+ArrayList<Float> calibrationVector_gyro = new ArrayList<>();   
+ArrayList<Float> calibrationVector_accx = new ArrayList<>();
+ArrayList<Float> calibrationVector_accy = new ArrayList<>();
+ArrayList<Float> calibrationVector_accz = new ArrayList<>();
 
+float [] acc = new float [4];
 int currentIndex = 0;
 int dataIndex =0;
 int flag = 0; 
@@ -55,11 +58,17 @@ void serialEvent(Serial myPort) {
       }
       
       if (calibration){
-         calibrationVector.add(gyro);
+         calibrationVector_gyro.add(gyro);
+         calibrationVector_accx.add(acc[1]);
+         calibrationVector_accy.add(acc[2]);
+         calibrationVector_accz.add(acc[3]);
       }
-      if (!calibration &&  calibrationVector.size()>0 && flag ==0 ){
+      if (!calibration &&  calibrationVector_gyro.size()>0 && flag ==0 ){
         averageForCalibration();
-        print(AvgCalibration);
+        print(AvgCalibration_gyro);
+        print(AvgCalibration_accx);
+        print(AvgCalibration_accy);
+        print(AvgCalibration_accz);
         flag = 1;
       }
          
