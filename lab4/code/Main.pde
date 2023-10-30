@@ -4,12 +4,13 @@ import org.gicentre.utils.stat.AbstractChart;
 
 Serial myPort;
 int[] FSRVector = new int[4];
-float gyro;
-ArrayList<Float> calibrationVector_gyro = new ArrayList<>();   
+ArrayList<Float> calibrationVector_gyrox = new ArrayList<>();   
+ArrayList<Float> calibrationVector_gyroy = new ArrayList<>();   
+ArrayList<Float> calibrationVector_gyroz = new ArrayList<>();   
 ArrayList<Float> calibrationVector_accx = new ArrayList<>();
 ArrayList<Float> calibrationVector_accy = new ArrayList<>();
 ArrayList<Float> calibrationVector_accz = new ArrayList<>();
-
+float [] gyro = new float [4];
 float [] acc = new float [4];
 int currentIndex = 0;
 int dataIndex =0;
@@ -18,9 +19,9 @@ int flagSave = 0;
 
 
 void setup() {
-  //String portName = Serial.list()[0];
-  //myPort = new Serial( this, portName, 115200);
-  //myPort.bufferUntil('\n');
+  String portName = Serial.list()[1];
+  myPort = new Serial( this, portName, 115200);
+  myPort.bufferUntil('\n');
   size(1400, 900);
   graph_setup();
 }
@@ -48,30 +49,34 @@ void serialEvent(Serial myPort) {
           if (i < 4){
             FSRVector[i] = int(values[i]);
           }
-          if (i == 4){
-            gyro = float (values [i]);
+          if (i >= 4&&i<7){
+            acc [i-4] = float(values[i-4]);
           }
-          if (i > 4){
-            acc [i-5] = float(values[i-5]);
+          if (i > 6){
+            gyro [i-6] = float(values[i-6]);
           }
         }
       }
       
       if (calibration){
-         calibrationVector_gyro.add(gyro);
+         calibrationVector_gyrox.add(gyro[1]);
+         calibrationVector_gyroy.add(gyro[2]);
+         calibrationVector_gyroz.add(gyro[3]);
          calibrationVector_accx.add(acc[1]);
          calibrationVector_accy.add(acc[2]);
          calibrationVector_accz.add(acc[3]);
       }
-      if (!calibration &&  calibrationVector_gyro.size()>0 && flag ==0 ){
+      if (!calibration &&  calibrationVector_gyrox.size()>0 && flag ==0 ){
         averageForCalibration();
-        print(AvgCalibration_gyro);
+        print(AvgCalibration_gyrox);
+        print(AvgCalibration_gyroy);
+        print(AvgCalibration_gyroz);
         print(AvgCalibration_accx);
         print(AvgCalibration_accy);
         print(AvgCalibration_accz);
         flag = 1;
       }
-      if (!calibration &&  calibrationVector_gyro.size()>0) {
+      if (!calibration &&  calibrationVector_gyrox.size()>0) {
         standing_or_motion();
         
         if (balanceMode){
