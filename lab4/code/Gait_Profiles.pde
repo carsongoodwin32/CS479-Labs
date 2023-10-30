@@ -52,10 +52,44 @@ void SaveTxT(){
   println("Data saved to: " + path);
 }
 
+void compareMFP(){
+  // Convert integers to floats for comparison
+  float profile1mfp = float(10);//set values later.
+  float profile2mfp = float(50);
+  float profile3mfp = float(100);
+  float profile4mfp = float(150);
+  float profile5mfp = float(200);
+
+  // Calculate the absolute difference between AvgMFP and each profile's MFP
+  float diff1 = abs(AvgMFP - profile1mfp);
+  float diff2 = abs(AvgMFP - profile2mfp);
+  float diff3 = abs(AvgMFP - profile3mfp);
+  float diff4 = abs(AvgMFP - profile4mfp);
+  float diff5 = abs(AvgMFP - profile5mfp);
+
+  // Find the minimum difference
+  float minDiff = min(diff1, min(diff2, min(diff3, min(diff4, diff5))));
+
+  // Set WalkMode based on the minimum difference
+  if (minDiff == diff1) {
+    WalkMode = "Profile 1";
+  } else if (minDiff == diff2) {
+    WalkMode = "Profile 2";
+  } else if (minDiff == diff3) {
+    WalkMode = "Profile 3";
+  } else if (minDiff == diff4) {
+    WalkMode = "Profile 4";
+  } else if (minDiff == diff5) {
+    WalkMode = "Profile 5";
+  }
+  print("Switched to: "+ WalkMode);
+  showWalkMode = true;
+}
 
 void MFP_calculator(){
   for (int i=0; i<FSR1Vector.size(); i++){
-    MFP.add(((FSR3Vector.get(i) + FSR1Vector.get(i))*100)/(FSR3Vector.get(i) + FSR1Vector.get(i) +FSR2Vector.get(i) + FSR4Vector.get(i) +0.001));
+    print(FSR1Vector.get(i) + ","+FSR2Vector.get(i)+","+FSR3Vector.get(i)+","+FSR4Vector.get(i)+"\n");
+    MFP.add(((FSR3Vector.get(i) + FSR2Vector.get(i))*100)/(FSR3Vector.get(i) + FSR2Vector.get(i) +FSR1Vector.get(i) + FSR4Vector.get(i) +0.001));
   }
 }
 void averageForMFP(){
@@ -64,4 +98,5 @@ void averageForMFP(){
     sum = sum + MFP.get(i);
   }
   AvgMFP = sum/MFP.size();
+  compareMFP();
 }

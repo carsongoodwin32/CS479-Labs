@@ -10,10 +10,13 @@ PImage cali;
 PImage standing;
 PImage motion;
 
+String WalkMode = "";
+
 boolean balanceMode = false; 
 boolean tiltMode = false;
 boolean mirrorMode = false;
 boolean calibration = false; 
+boolean showWalkMode = true;
 float rot = 10; 
 float startTime_Cali=0;
 float remainingTime_cali = 0;
@@ -35,6 +38,13 @@ void DrawInterface() {
   float subtitleWidth = textWidth(subtitle); //Calculate the width of the subtitle 
   float x_st = (width - subtitleWidth)/2;
   text(subtitle, x_st, 80); // Draw the centered text
+  
+  if(showWalkMode){
+    String walkingProfile = "Your Profile is: "+WalkMode;
+    float walkingWidth = textWidth(walkingProfile);
+    float x_wp = (width - walkingWidth)/2;
+    text(walkingProfile, x_wp, 110); // Draw the centered text
+  }
   
   
   people = loadImage("people.jpg");

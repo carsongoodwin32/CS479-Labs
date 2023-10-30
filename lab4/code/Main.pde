@@ -49,6 +49,7 @@ void serialEvent(Serial myPort) {
           if(values[i]!=null){
             if (i < 4){
               FSRVector[i] = int(values[i]);
+              //print(FSRVector[0] + ","+FSRVector[1]+","+FSRVector[2]+","+FSRVector[3]+"\n");
             }
             if (i >= 4&&i<7){
               //print(i+"\n");
