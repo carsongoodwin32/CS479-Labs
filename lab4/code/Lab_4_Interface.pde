@@ -65,16 +65,15 @@ void DrawInterface() {
     fill(255); // Set the fill color to white
     rect(x, y, 2 * squareSize + spacing, 2 * squareSize); // Draw a white square covering the four squares
     
-    float x_c = 650 + squareSize+spacing/2; // Adjust the x-coordinate for the covering square
-    float y_c = 125 +squareSize ; // Adjust the y-coordinate for the covering square
     float circleSizeBlue = 2 * squareSize/4 + spacing; // Adjust the size of the blue circle
     float circleSizeRed = circleSizeBlue - 100; // Adjust the size of the red circle
 
+    float x_c = 650 + squareSize+spacing/2; // Adjust the x-coordinate for the covering square
+    float y_c = 125 +squareSize ; // Adjust the y-coordinate for the covering square
     fill(0, 0, 255); // Set the fill color to blue
     ellipse(x_c , y_c, circleSizeBlue, circleSizeBlue); // Draw a blue circle
-    
-    fill(255, 0, 0); // Set the fill color to red
-    ellipse(x_c, y_c, circleSizeRed, circleSizeRed); // Draw a red circle on top of the blue one
+   
+    draw_red_circ(circleSizeRed,squareSize,x_c,y_c);
     
     
     float title_balance_width = textWidth( "Balance Game"); // Get the width of the title text
@@ -121,6 +120,7 @@ void DrawInterface() {
     if (tiltMode) {
       pushMatrix();
       translate(xi + 700/4, yi + 680/2); // Translate to the center of the image
+      rot = -(gyro[2])*10;
       rotate(radians(rot)); // Rotate by the global 'rot' angle in degrees
       
       if (!mirrorMode){
@@ -253,7 +253,7 @@ void DrawInterface() {
   image(balance, x3, y3, otherLittleSquareSize, otherLittleSquareSize); 
   }
   if(balanceMode){
-    image(arrow, x3, y3, otherLittleSquareSize, otherLittleSquareSize); 
+    //image(arrow, x3, y3, otherLittleSquareSize, otherLittleSquareSize); 
   }
   foot = loadImage("foot.png");
   image(foot, x3, y4, otherLittleSquareSize, otherLittleSquareSize); 

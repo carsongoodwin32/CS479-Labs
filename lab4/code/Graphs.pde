@@ -268,6 +268,16 @@ void draw_pressure_graph() {
   stroke(0); // Set the stroke color to a light gray
   int[] x = {375,200, 240,280};//get offsets from center of image
   int[] y = {475,200, 560,725};//get offsets from center of image
+  if(mirrorMode){//:)
+    x[0] = 225;
+    y[0] = 475;
+    x[1] = 400;
+    y[1] = 200;
+    x[2] = 360;
+    y[2] = 560;
+    x[3] = 320;
+    y[3] = 725;
+  }
   for (int i = 0; i < 4; i++) {
 
     for (int j = 10; j > 0; j--) {
