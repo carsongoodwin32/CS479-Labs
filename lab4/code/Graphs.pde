@@ -266,8 +266,8 @@ void graph_serialEvent() {
 void draw_pressure_graph() {
   // Map sensor values to colors and create the heatmap effect
   stroke(0); // Set the stroke color to a light gray
-  int[] x = {200, 280, 375, 240};//get offsets from center of image
-  int[] y = {375, 725, 475, 560};//get offsets from center of image
+  int[] x = {375,200, 240,280};//get offsets from center of image
+  int[] y = {475,200, 560,725};//get offsets from center of image
   for (int i = 0; i < 4; i++) {
 
     for (int j = 10; j > 0; j--) {

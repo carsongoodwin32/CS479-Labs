@@ -10,8 +10,8 @@ ArrayList<Float> calibrationVector_gyroz = new ArrayList<>();
 ArrayList<Float> calibrationVector_accx = new ArrayList<>();
 ArrayList<Float> calibrationVector_accy = new ArrayList<>();
 ArrayList<Float> calibrationVector_accz = new ArrayList<>();
-float [] gyro = new float [4];
-float [] acc = new float [4];
+Float [] gyro = new Float [4];
+Float [] acc = new Float [4];
 int currentIndex = 0;
 int dataIndex =0;
 int flag = 0; 
@@ -44,36 +44,41 @@ void serialEvent(Serial myPort) {
       data = data.trim();
       String[] values = data.split(",");
       
-      if (values.length == 9) {
-        for (int i = 0; i < 9; i++) {
-          if (i < 4){
-            FSRVector[i] = int(values[i]);
-          }
-          if (i >= 4&&i<7){
-            acc [i-4] = float(values[i-4]);
-          }
-          if (i > 6){
-            gyro [i-6] = float(values[i-6]);
+      if (values.length == 10) {
+        for (int i = 0; i < 10; i++) {
+          if(values[i]!=null){
+            if (i < 4){
+              FSRVector[i] = int(values[i]);
+            }
+            if (i >= 4&&i<7){
+              //print(i+"\n");
+              acc [i-4] = float(values[i]);
+            }
+            if (i >=7){
+              gyro [i-7] = float(values[i]);
+            }
           }
         }
       }
-      
+      //print(gyro[0]+"\n");
       if (calibration){
-         calibrationVector_gyrox.add(gyro[1]);
-         calibrationVector_gyroy.add(gyro[2]);
-         calibrationVector_gyroz.add(gyro[3]);
-         calibrationVector_accx.add(acc[1]);
-         calibrationVector_accy.add(acc[2]);
-         calibrationVector_accz.add(acc[3]);
+          //print(gyro[0]+"\n");
+         calibrationVector_gyrox.add(gyro[0]);
+         
+         calibrationVector_gyroy.add(gyro[1]);
+         calibrationVector_gyroz.add(gyro[2]);
+         calibrationVector_accx.add(acc[0]);
+         calibrationVector_accy.add(acc[1]);
+         calibrationVector_accz.add(acc[2]);
       }
       if (!calibration &&  calibrationVector_gyrox.size()>0 && flag ==0 ){
         averageForCalibration();
-        print(AvgCalibration_gyrox);
-        print(AvgCalibration_gyroy);
-        print(AvgCalibration_gyroz);
-        print(AvgCalibration_accx);
-        print(AvgCalibration_accy);
-        print(AvgCalibration_accz);
+        //print(AvgCalibration_gyrox);
+        //print(AvgCalibration_gyroy);
+        //print(AvgCalibration_gyroz);
+        //print(AvgCalibration_accx);
+        //print(AvgCalibration_accy);
+        //print(AvgCalibration_accz);
         flag = 1;
       }
       if (!calibration &&  calibrationVector_gyrox.size()>0) {
@@ -91,12 +96,12 @@ void serialEvent(Serial myPort) {
        FSR3Vector.add(FSRVector[2]);
        FSR4Vector.add(FSRVector[3]);
      }
-     if (!rec && flagSave ==0 && MFP.size()>0){
+     if (!rec && flagSave ==0 && FSR1Vector.size()>0){
        //function that save 
       MFP_calculator();
       averageForMFP();
       SaveTxT();
-      print(MFP);
+      print("MFP: "+MFP+"\n");
       flagSave=1;
      }
      

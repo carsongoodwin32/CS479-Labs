@@ -6,26 +6,32 @@ float AvgCalibration_accy = 0;
 float AvgCalibration_accz = 0;
 
 void averageForCalibration(){
+  print("Got Here");
   // gyro 
-  float sum_gyrox = 0;
-  for (int i = 0; i < calibrationVector_gyrox.size(); i++) {
-    sum_gyrox = sum_gyrox + calibrationVector_gyrox.get(i);
+    if (!calibrationVector_gyrox.isEmpty()) {
+    float sum_gyrox = 0;
+    for (int i = 0; i < calibrationVector_gyrox.size(); i++) {
+      sum_gyrox += calibrationVector_gyrox.get(i);
+    }
+    AvgCalibration_gyrox = sum_gyrox / calibrationVector_gyrox.size();
   }
-  AvgCalibration_gyrox = sum_gyrox/calibrationVector_gyrox.size();
-  
+  print("Got Here");
+  if (!calibrationVector_gyroy.isEmpty()) {
     float sum_gyroy = 0;
-  for (int i = 0; i < calibrationVector_gyroy.size(); i++) {
-    sum_gyroy = sum_gyroy + calibrationVector_gyroy.get(i);
+    for (int i = 0; i < calibrationVector_gyroy.size(); i++) {
+      sum_gyroy += calibrationVector_gyroy.get(i);
+    }
+    AvgCalibration_gyroy = sum_gyroy / calibrationVector_gyroy.size();
   }
-  AvgCalibration_gyroy = sum_gyroy/calibrationVector_gyroy.size();
-  
-  float sum_gyroz = 0;
-  for (int i = 0; i < calibrationVector_gyroz.size(); i++) {
-    sum_gyroz = sum_gyroz + calibrationVector_gyroz.get(i);
+  print("Got Here");
+  if (!calibrationVector_gyroz.isEmpty()) {
+    float sum_gyroz = 0;
+    for (int i = 0; i < calibrationVector_gyroz.size(); i++) {
+      sum_gyroz += calibrationVector_gyroz.get(i);
+    }
+    AvgCalibration_gyroz = sum_gyroz / calibrationVector_gyroz.size();
   }
-  AvgCalibration_gyroz = sum_gyroz/calibrationVector_gyroz.size();
-  
-  // acc x
+  print("Got Here");
   float sum_accx = 0;
   for (int i = 0; i < calibrationVector_accx.size(); i++) {
     sum_accx = sum_accx + calibrationVector_accx.get(i);
@@ -46,4 +52,5 @@ void averageForCalibration(){
     sum_accz = sum_accz + calibrationVector_accz.get(i);
   }
     AvgCalibration_accz = sum_accz/calibrationVector_accz.size();
+    print("Got Here");
 }
