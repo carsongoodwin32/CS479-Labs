@@ -74,7 +74,7 @@ void compareMFP(){
   if (minDiff == diff1) {
     WalkMode = "Profile 1";
   } else if (minDiff == diff2) {
-    WalkMode = "Profile 2";
+    WalkMode = "Heel Walking";
   } else if (minDiff == diff3) {
     WalkMode = "Profile 3";
   } else if (minDiff == diff4) {
