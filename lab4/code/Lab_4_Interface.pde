@@ -9,6 +9,7 @@ PImage record;
 PImage cali; 
 PImage standing;
 PImage motion;
+PImage reset; 
 
 String WalkMode = "";
 
@@ -238,6 +239,9 @@ void DrawInterface() {
   cali =     loadImage("calibration.png");
   motion=    loadImage("motion.jpg");
   standing = loadImage("Standing.png");
+  reset =    loadImage("reset.png");
+  image(reset,900,750,otherLittleSquareSize/2,otherLittleSquareSize/2);
+  
   if (!still){
     image(motion,x3,700,otherLittleSquareSize,otherLittleSquareSize);
     text("Motion" , x3+20,720 + otherLittleSquareSize);
@@ -385,5 +389,13 @@ void mousePressed() {
         startTime_Cali = millis();
       }
     }
+  }
+  if (mouseX >= 900 && mouseX <= 900 + otherLittleSquareSize/2 && mouseY >= 750 && mouseY <= 750 + otherLittleSquareSize/2) {
+      println("Reset");
+      count_step=0;
+      startTime_cs = current_time;
+      if (reset_cs){
+        reset_cs=false;
+      }
   }
 }
