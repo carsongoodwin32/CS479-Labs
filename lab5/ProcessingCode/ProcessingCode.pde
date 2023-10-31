@@ -57,6 +57,8 @@ void draw() {
   
   // Display the calibration button
    if(doneCalibrating){//Do all UI work here
+     textSize(18);
+     text("Calibrated", width-100, height - 35); // Button label
      drawSquareOnScreen();
    }
   if (!calibrating) {
