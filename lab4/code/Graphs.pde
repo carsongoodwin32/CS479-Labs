@@ -266,7 +266,7 @@ void graph_serialEvent() {
 void draw_pressure_graph() {
   // Map sensor values to colors and create the heatmap effect
   stroke(0); // Set the stroke color to a light gray
-  int[] x = {375,200, 240,280};//get offsets from center of image
+  int[] x = {375,200, 240,280};//get offsets from center of image //FSR1:LF //FSR2: MF, //FSR3:MM //FSR4: HEEL
   int[] y = {475,200, 560,725};//get offsets from center of image
   if(mirrorMode){//:)
     x[0] = 225;

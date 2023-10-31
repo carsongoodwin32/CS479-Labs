@@ -134,7 +134,7 @@ void loop() {
   if(val4<0){
     val4=0;
   }
-  analogWrite(11, (val4/1000)*255); 
+  analogWrite(11, (val4/1000)*255); //1: /2:Heel
   String printOut = String(val3)+","+String(val4)+","+String(val2)+","+String(val1)+","+String(a.acceleration.x)+","+String(a.acceleration.y)+","+String(a.acceleration.z)+","+String(g.gyro.x)+","+String(g.gyro.y)+","+String(g.gyro.z);
   Serial.println(printOut);
   delay(250);
