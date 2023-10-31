@@ -30,7 +30,7 @@ void setup() {
 void draw() {
   background(127);
   // Your main drawing code here
-  
+  DrawInterface();
   // Display the calibration button
    if(doneCalibrating){//Do all UI work here
     textSize(18);
@@ -70,41 +70,21 @@ void draw() {
 }
 
 void mousePressed() {
-  if (!calibrating && mouseX > 20 && mouseX < 120 && mouseY > height - 60 && mouseY < height - 20) {
-    calibrating = true;
-    countdown = 5;  // Reset the countdown when starting calibration
-    calibrationStartTime = millis(); // Initialize calibrationStartTime
-    accelXList.clear();
-    accelYList.clear();
-    println("Calibration started...");
-  }
-  
-}
-
-void serialEvent(Serial port) {
-  String data = port.readStringUntil('\n'); // Read data until a newline character is received
-
-  if (data != null) {
-    String[] values = data.trim().split(",");
-    if (values.length == 4) {
-      accelerationX = float(values[0]);
-      accelerationY = float(values[1]);
-      analogValue1 = float(values[2]);
-      analogValue2 = float(values[3]);
-      
-      // If calibrating, add acceleration values to ArrayLists
-      if (calibrating) {
-        accelXList.add(accelerationX);
-        accelYList.add(accelerationY);
-        println("Added acceleration values: X=" + accelerationX + ", Y=" + accelerationY);
+  if (mouseButton==LEFT){
+    for (int i = 0; i < 7; i++) {
+      if (mouseX >= ox[i] && mouseX <= ox[i] + 30 && mouseY >= oy[i] && mouseY <= oy[i] + 30) {
+        squaresAreHeld[i] = true;
+        println("Square " + (i + 1) + " selected");
+        break;
       }
     }
   }
-}
-
-void keyPressed() {
-  // Press 'R' to reset the countdown timer
-  if (key == 'r' || key == 'R') {
-    countdown = 5;
+   else {
+    for (int i = 0; i < 7; i++) {
+      if (squaresAreHeld[i]) {
+        squaresAreHeld[i] = false;
+        break;
+      }
+    }
   }
 }
