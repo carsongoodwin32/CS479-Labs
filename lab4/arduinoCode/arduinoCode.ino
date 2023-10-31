@@ -131,6 +131,10 @@ void loop() {
   analogWrite(10, (val3/1000)*255); 
   val4 = analogRead(A4);  // read the input pin
   analogWrite(11, (val4/1000)*255); 
+  val4 = ((val4 - 846)*6);
+  if(val4<0){
+    val4=0;
+  }
   String printOut = String(val3)+","+String(val4)+","+String(val2)+","+String(val1)+","+String(a.acceleration.x)+","+String(a.acceleration.y)+","+String(a.acceleration.z)+","+String(g.gyro.x)+","+String(g.gyro.y)+","+String(g.gyro.z);
   Serial.println(printOut);
   delay(250);
