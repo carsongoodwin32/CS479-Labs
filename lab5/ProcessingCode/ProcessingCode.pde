@@ -7,12 +7,13 @@ float accelerationX, accelerationY, analogValue1, analogValue2;
 ArrayList<Float> accelXList, accelYList;
 boolean calibrating = false;
 boolean doneCalibrating = false;
+boolean allSquaresInBoxes = false;
 int countdown = 5;  // Initial countdown value
 int calibrationStartTime;  // Initialize calibrationStartTime
 float accel_x_avg = 0;
 float accel_y_avg = 0;
-int curr_x = width/2;
-int curr_y = height/2;
+int curr_x = 690;
+int curr_y = 440;
 
 void setup() {
   size(1400, 900);  // Set the screen size
@@ -29,6 +30,8 @@ void setup() {
   accelYList = new ArrayList<Float>();
 }
 void drawSquareOnScreen() {
+  fill(255, 0, 0); // Set the fill color to red
+  rect(curr_x, curr_y, 20, 20); // Create a red square at curr_x and curr_y
   float diff_x = accelerationX - accel_x_avg; // Calculate the difference between accelerationX and accel_x_avg
   float diff_y = accelerationY - accel_y_avg; // Calculate the difference between accelerationX and accel_x_avg
   int temp_x = curr_x - int(diff_x); // Add the difference to curr_x
@@ -47,19 +50,25 @@ void drawSquareOnScreen() {
   if(curr_y>height-20){
     curr_y = height-20;
   }
-  fill(255, 0, 0); // Set the fill color to red
-  rect(curr_x, curr_y, 20, 20); // Create a red square at curr_x and curr_y
 }
 
+void incrementTimer() {
+    fill(0); // Set the text color to match the background (black)
+    textSize(18);
+    text("Timer: " + (((millis() - calibrationStartTime) / 1000) - 5), 400, 20);
+    fill(255); 
+}
 void draw() {
   background(127);
   // Your main drawing code here
   
   // Display the calibration button
-   if(doneCalibrating){//Do all UI work here
+   if(doneCalibrating&&!allSquaresInBoxes){//Do all UI work here
+   
      textSize(18);
      text("Calibrated", width-100, height - 35); // Button label
      drawSquareOnScreen();
+     incrementTimer();
    }
   if (!calibrating) {
     fill(0, 255, 0); // Green color for the button
@@ -128,8 +137,4 @@ void serialEvent(Serial port) {
 }
 
 void keyPressed() {
-  // Press 'R' to reset the countdown timer
-  if (key == 'r' || key == 'R') {
-    countdown = 5;
-  }
 }
