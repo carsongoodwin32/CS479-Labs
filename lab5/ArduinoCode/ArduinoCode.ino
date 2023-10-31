@@ -113,7 +113,7 @@ void loop() {
   // Serial.println(" degC");
 
   // Serial.println("");
-  String printOut = String(a.acceleration.x)+","+String(a.acceleration.y)+","+String(a.acceleration.z)+","+String(g.gyro.x)+","+String(g.gyro.y)+","+String(g.gyro.z);
+  String printOut = String(a.acceleration.x)+","+String(a.acceleration.y)+","+String(analogRead(A1))+","+String(analogRead(A2));
   Serial.println(printOut);
   delay(250);
 }
