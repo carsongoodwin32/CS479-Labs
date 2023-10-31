@@ -195,7 +195,7 @@ void DrawInterface() {
   text("#Step/Min", textX, textY-30); // Draw the centered title text
   // Display the number 50 centered in the same way
   textSize(20);
-  String number =  Integer.toString(count_step);
+  String number =  Float.toString(cadence);
   float numberWidth = textWidth(number); // Calculate the width of the number
   float numberX = x1 + littleSquareSize - numberWidth / 2;
   float numberY = y + littleSquareSize / 2 + 20; // Adjust for vertical alignment

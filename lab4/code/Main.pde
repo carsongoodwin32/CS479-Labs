@@ -108,4 +108,5 @@ void serialEvent(Serial myPort) {
      
    }
  graph_serialEvent();
+ counting_step();
 }
