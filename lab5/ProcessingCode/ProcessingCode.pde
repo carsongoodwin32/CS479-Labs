@@ -55,7 +55,7 @@ void drawSquareOnScreen() {
 void incrementTimer() {
     fill(0); // Set the text color to match the background (black)
     textSize(18);
-    text("Timer: " + (((millis() - calibrationStartTime) / 1000) - 5), 400, 20);
+    text("Timer: " + String.format("%.2f",((float(millis() - calibrationStartTime) / 1000) - 5)), 400, 20);
     fill(255); 
 }
 void draw() {
@@ -97,7 +97,7 @@ void draw() {
     else{
     fill(0); // Set the text color to match the background (black)
     textSize(18);
-    text("Calibrating: " + abs(((millis() - calibrationStartTime) / 1000) - 5), 30, height - 35);
+    text("Calibrating: " + String.format("%.2f",abs((float(millis() - calibrationStartTime) / 1000) - 5)), 30, height - 35);
     fill(255); 
     }
   }
