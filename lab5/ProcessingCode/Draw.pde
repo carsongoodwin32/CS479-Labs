@@ -38,8 +38,8 @@ void DrawInterface() {
   for (int i = 0; i < 7; i++) {
     rect(ox[i], oy[i], size, size); // Draw a little square
      if (squaresAreHeld[i]) {
-      ox[i] = mouseX - 15; // Offset to center the square on the cursor
-      oy[i] = mouseY - 15;
+      ox[i] = curr_x - 10; // Offset to center the square on the cursor
+      oy[i] = curr_y - 10;
     }
   }
 }
