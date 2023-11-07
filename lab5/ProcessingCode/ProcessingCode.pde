@@ -17,6 +17,7 @@ int curr_y = 440;
 
 boolean analogPressed1 = false;
 boolean analogPressed2 = false;
+boolean boxesNotDone = true;
 
 void setup() {
   size(1400, 900);  // Set the screen size
@@ -56,6 +57,41 @@ void drawSquareOnScreen() {
   curr_y = temp_y;
 }
 
+void checkSquaresIn(){
+  boolean haveWon = true;
+  boolean[] squaresInPlace = {false,false,false,false,false,false,false};
+  float containerWidth = width / 3; // Calculate the width of each smaller container
+  for(int i = 0;i<7;i++){
+    int x = int(ox[i]);
+    int y = int(oy[i]);
+    if(i%2!=0){
+      if (x >= 10 && x <= 10 + containerWidth) {
+        if (y >= 500 && y <= 500 + 300) {
+          squaresInPlace[i] = true;
+        }
+      }
+    }
+    else{
+      if (x >= 2 * containerWidth - 10 && x <= 2 * containerWidth - 10 + containerWidth) {
+        if (y >= 500 && y <= 500 + 300) {
+          squaresInPlace[i] = true;
+        }
+      }
+    }
+  }
+  
+  for(int i = 0;i<7;i++){
+    
+    if(squaresInPlace[i]==false){
+      print(i+"\n");
+      haveWon=false;
+    }
+  }
+  if(haveWon){
+    boxesNotDone = false;
+  }
+}
+
 void incrementTimer() {
     fill(0); // Set the text color to match the background (black)
     textSize(18);
@@ -68,14 +104,18 @@ void draw() {
   // Your main drawing code here
   
   // Display the calibration button
-   if(doneCalibrating&&!allSquaresInBoxes){//Do all UI work here
+   if(doneCalibrating&&!allSquaresInBoxes&&boxesNotDone){//Do all UI work here
    
      textSize(18);
      text("Calibrated", width-100, height - 35); // Button label
      DrawInterface();
      drawSquareOnScreen();
      incrementTimer();
+     checkSquaresIn();
      
+   }
+   if(!boxesNotDone){
+     displayWinScreen();
    }
   if (!calibrating) {
     fill(0, 255, 0); // Green color for the button

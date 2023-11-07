@@ -45,3 +45,12 @@ void DrawInterface() {
     }
   }
 }
+void displayWinScreen(){
+  fill(255);
+  textSize(30);
+  String title = "Win Screen"; // Your title text  
+  float titleWidth = textWidth(title); // Calculate the width of the text
+  // Calculate the x-coordinate for the text to center it horizontally
+  float x_t = (width - titleWidth) / 2;
+  text(title, x_t, 50); // Draw the centered text
+}
