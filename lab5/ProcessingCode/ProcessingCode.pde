@@ -15,25 +15,12 @@ float accel_y_avg = 0;
 int curr_x = 690;
 int curr_y = 440;
 
-<<<<<<< HEAD
-boolean analogPressed1 = false;
-boolean analogPressed2 = false;
-boolean boxesNotDone = true;
-
-float winTime = 0;
-
-=======
->>>>>>> main
 void setup() {
   size(1400, 900);  // Set the screen size
 
   myPort = new Serial(this, Serial.list()[1], 115200);
   myPort.bufferUntil('\n'); // Set a newline character as the delimiter
 
-<<<<<<< HEAD
-
-=======
->>>>>>> main
   // Initialize variables
   accelerationX = 0.0;
   accelerationY = 0.0;
@@ -43,15 +30,6 @@ void setup() {
   accelYList = new ArrayList<Float>();
 }
 void drawSquareOnScreen() {
-<<<<<<< HEAD
-  fill(100, 100, 200); // Set the fill color to red
-  rect(curr_x, curr_y, 20, 20); // Create a red square at curr_x and curr_y
-  float diff_x = accelerationX - accel_x_avg; // Calculate the difference between accelerationX and accel_x_avg
-  float diff_y = accelerationY - accel_y_avg; // Calculate the difference between accelerationX and accel_x_avg
-  int temp_x = curr_x + int(diff_x); // Add the difference to curr_x
-  int temp_y = curr_y - int(diff_y); // Add accelerationY to curr_y
-    if(curr_x<0){
-=======
   fill(255, 0, 0); // Set the fill color to red
   rect(curr_x, curr_y, 20, 20); // Create a red square at curr_x and curr_y
   float diff_x = accelerationX - accel_x_avg; // Calculate the difference between accelerationX and accel_x_avg
@@ -61,7 +39,6 @@ void drawSquareOnScreen() {
   curr_x = temp_x;
   curr_y = temp_y;
   if(curr_x<0){
->>>>>>> main
     curr_x = 0;
   }
   if(curr_x>width-20){
@@ -73,88 +50,25 @@ void drawSquareOnScreen() {
   if(curr_y>height-20){
     curr_y = height-20;
   }
-<<<<<<< HEAD
-  curr_x = temp_x;
-  curr_y = temp_y;
-}
-
-void checkSquaresIn(){
-  boolean haveWon = true;
-  boolean[] squaresInPlace = {false,false,false,false,false,false,false};
-  float containerWidth = width / 3; // Calculate the width of each smaller container
-  for(int i = 0;i<7;i++){
-    int x = int(ox[i]);
-    int y = int(oy[i]);
-    if(i%2!=0){
-      if (x >= 10 && x <= 10 + containerWidth) {
-        if (y >= 500 && y <= 500 + 300) {
-          squaresInPlace[i] = true;
-        }
-      }
-    }
-    else{
-      if (x >= 2 * containerWidth - 10 && x <= 2 * containerWidth - 10 + containerWidth) {
-        if (y >= 500 && y <= 500 + 300) {
-          squaresInPlace[i] = true;
-        }
-      }
-    }
-  }
-  
-  for(int i = 0;i<7;i++){
-    
-    if(squaresInPlace[i]==false){
-      print(i+"\n");
-      haveWon=false;
-    }
-  }
-  if(haveWon){
-    boxesNotDone = false;
-  }
-=======
->>>>>>> main
 }
 
 void incrementTimer() {
     fill(0); // Set the text color to match the background (black)
     textSize(18);
-<<<<<<< HEAD
-    text("Timer: " + String.format("%.2f",((float(millis() - calibrationStartTime) / 1000) - 5)), width/2-45, 80);
-    fill(255); 
-}
-
-=======
     text("Timer: " + String.format("%.2f",((float(millis() - calibrationStartTime) / 1000) - 5)), 400, 20);
     fill(255); 
 }
->>>>>>> main
 void draw() {
   background(127);
   // Your main drawing code here
   
   // Display the calibration button
-<<<<<<< HEAD
-   if(doneCalibrating&&!allSquaresInBoxes&&boxesNotDone){//Do all UI work here
-   
-     textSize(18);
-     text("Calibrated", width-100, height - 35); // Button label
-     DrawInterface();
-     drawSquareOnScreen();
-     incrementTimer();
-     checkSquaresIn();
-     winTime = float(millis() - calibrationStartTime) / 1000;
-     
-   }
-   if(!boxesNotDone){
-     displayWinScreen();
-=======
    if(doneCalibrating&&!allSquaresInBoxes){//Do all UI work here
    
      textSize(18);
      text("Calibrated", width-100, height - 35); // Button label
      drawSquareOnScreen();
      incrementTimer();
->>>>>>> main
    }
   if (!calibrating) {
     fill(0, 255, 0); // Green color for the button
@@ -198,27 +112,7 @@ void mousePressed() {
     accelYList.clear();
     println("Calibration started...");
   }
-<<<<<<< HEAD
-  if (mouseButton==LEFT){
-    for (int i = 0; i < 7; i++) {
-      if (curr_x >= ox[i] && curr_x <= ox[i] + 30 && curr_y >= oy[i] && curr_y <= oy[i] + 30) {
-        squaresAreHeld[i] = true;
-        println("Square " + (i + 1) + " selected");
-        break;
-      }
-    }
-  }
-   else {
-    for (int i = 0; i < 7; i++) {
-      if (squaresAreHeld[i]) {
-        squaresAreHeld[i] = false;
-        break;
-      }
-    }
-  }
-=======
   
->>>>>>> main
 }
 
 void serialEvent(Serial port) {
@@ -238,44 +132,9 @@ void serialEvent(Serial port) {
         accelYList.add(accelerationY);
         println("Added acceleration values: X=" + accelerationX + ", Y=" + accelerationY);
       }
-<<<<<<< HEAD
-      if(analogValue1>1000&& !analogPressed1){
-        analogPressed1 = true;
-      }
-      if(analogValue1<500 && analogPressed1){
-        analogPressed1 = false;
-      }
-      if(analogValue2>1000&& !analogPressed2){
-        analogPressed2 = true;
-      }
-      if(analogValue2<500&&analogPressed2){
-        analogPressed2 = false;
-      }
-    }
-  }
-  if (analogPressed1==true){
-    for (int i = 0; i < 7; i++) {
-      if (curr_x >= ox[i] && curr_x <= ox[i] + 30 && curr_y >= oy[i] && curr_y <= oy[i] + 30) {
-        squaresAreHeld[i] = true;
-        println("Square " + (i + 1) + " selected");
-        break;
-      }
-    }
-  }
-   if(analogPressed2 ==true) {
-    for (int i = 0; i < 7; i++) {
-      if (squaresAreHeld[i]) {
-        squaresAreHeld[i] = false;
-        break;
-      }
-    }
-  }
-}
-=======
     }
   }
 }
 
 void keyPressed() {
 }
->>>>>>> main
