@@ -1,5 +1,6 @@
 float[] ox = {330, 260, 230, 830, 530, 308, 630};
 float[] oy = {130, 280, 230, 330, 270, 330, 260};
+int[] colors = {255,0,255,0,255,0,255};
 boolean[] squaresAreHeld = new boolean[7]; // To keep track of which squares are held
 
 
@@ -25,17 +26,18 @@ void DrawInterface() {
   rect(10, 100, 1401-20, 300); // Draw a big rectangle for the first container
   
   // -------------------------------- Second container -----------------------------
-  fill(255); // Change the color for the second container
+  fill(211,211,211); // Change the color for the second container
   float containerWidth = width / 3; // Calculate the width of each smaller container
   rect(10, 500, containerWidth, 300); // Draw the first smaller rectangle
   
   // -------------------------------- Third container -----------------------------
-  fill(255); // Change the color for the third container
+  fill(255,114,118); // Change the color for the third container
   rect(2*containerWidth-10, 500, containerWidth, 300); // Draw the second smaller rectangle
   
   // ------------------------------- Objects ---------------------------------------
   
   for (int i = 0; i < 7; i++) {
+    fill(colors[i],0,0);
     rect(ox[i], oy[i], size, size); // Draw a little square
      if (squaresAreHeld[i]) {
       ox[i] = curr_x - 10; // Offset to center the square on the cursor

@@ -15,6 +15,9 @@ float accel_y_avg = 0;
 int curr_x = 690;
 int curr_y = 440;
 
+boolean analogPressed1 = false;
+boolean analogPressed2 = false;
+
 void setup() {
   size(1400, 900);  // Set the screen size
 
@@ -31,12 +34,12 @@ void setup() {
   accelYList = new ArrayList<Float>();
 }
 void drawSquareOnScreen() {
-  fill(255, 0, 0); // Set the fill color to red
+  fill(100, 100, 200); // Set the fill color to red
   rect(curr_x, curr_y, 20, 20); // Create a red square at curr_x and curr_y
   float diff_x = accelerationX - accel_x_avg; // Calculate the difference between accelerationX and accel_x_avg
   float diff_y = accelerationY - accel_y_avg; // Calculate the difference between accelerationX and accel_x_avg
   int temp_x = curr_x + int(diff_x); // Add the difference to curr_x
-  int temp_y = curr_y + int(diff_y); // Add accelerationY to curr_y
+  int temp_y = curr_y - int(diff_y); // Add accelerationY to curr_y
     if(curr_x<0){
     curr_x = 0;
   }
@@ -151,6 +154,35 @@ void serialEvent(Serial port) {
         accelXList.add(accelerationX);
         accelYList.add(accelerationY);
         println("Added acceleration values: X=" + accelerationX + ", Y=" + accelerationY);
+      }
+      if(analogValue1>1000&& !analogPressed1){
+        analogPressed1 = true;
+      }
+      if(analogValue1<500 && analogPressed1){
+        analogPressed1 = false;
+      }
+      if(analogValue2>1000&& !analogPressed2){
+        analogPressed2 = true;
+      }
+      if(analogValue2<500&&analogPressed2){
+        analogPressed2 = false;
+      }
+    }
+  }
+  if (analogPressed1==true){
+    for (int i = 0; i < 7; i++) {
+      if (curr_x >= ox[i] && curr_x <= ox[i] + 30 && curr_y >= oy[i] && curr_y <= oy[i] + 30) {
+        squaresAreHeld[i] = true;
+        println("Square " + (i + 1) + " selected");
+        break;
+      }
+    }
+  }
+   if(analogPressed2 ==true) {
+    for (int i = 0; i < 7; i++) {
+      if (squaresAreHeld[i]) {
+        squaresAreHeld[i] = false;
+        break;
       }
     }
   }
