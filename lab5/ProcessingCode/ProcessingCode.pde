@@ -19,6 +19,8 @@ boolean analogPressed1 = false;
 boolean analogPressed2 = false;
 boolean boxesNotDone = true;
 
+float winTime = 0;
+
 void setup() {
   size(1400, 900);  // Set the screen size
 
@@ -112,6 +114,7 @@ void draw() {
      drawSquareOnScreen();
      incrementTimer();
      checkSquaresIn();
+     winTime = float(millis() - calibrationStartTime) / 1000;
      
    }
    if(!boxesNotDone){

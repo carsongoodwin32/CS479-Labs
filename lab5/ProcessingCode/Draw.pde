@@ -47,10 +47,16 @@ void DrawInterface() {
 }
 void displayWinScreen(){
   fill(255);
-  textSize(30);
-  String title = "Win Screen"; // Your title text  
+  textSize(120);
+  String title = "You Win!!!!!!!!!!"; // Your title text  
   float titleWidth = textWidth(title); // Calculate the width of the text
   // Calculate the x-coordinate for the text to center it horizontally
   float x_t = (width - titleWidth) / 2;
-  text(title, x_t, 50); // Draw the centered text
+  text(title, x_t, 300); // Draw the centered text
+  textSize(30);
+  String title2 = "Your time was: "+String.format("%.2f",(winTime - 5)); // Your title text  
+  float titleWidth2 = textWidth(title2); // Calculate the width of the text
+  // Calculate the x-coordinate for the text to center it horizontally
+  float x_t2 = (width - titleWidth2) / 2;
+  text(title2, x_t2, 400); // Draw the centered text
 }
