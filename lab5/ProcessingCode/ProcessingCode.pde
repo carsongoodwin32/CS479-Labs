@@ -214,20 +214,22 @@ void serialEvent(Serial port) {
         click2List.add(analogValue2);
         //println("Added acceleration values: X=" + accelerationX + ", Y=" + accelerationY);
       }
+      else{
+        if(analogValue1<analogCalib1*.9&& !analogPressed1){
+          analogPressed1 = true;
+        }
+        if(analogValue1>=analogCalib1*.9 && analogPressed1){
+          analogPressed1 = false;
+        }
+        if(analogValue2<analogCalib2*.9&& !analogPressed2){
+          analogPressed2 = true;
+        }
+        if(analogValue2>=analogCalib2*.9&&analogPressed2){
+          analogPressed2 = false;
+        }
+      }
     }
   }
-       if(analogValue1<analogCalib1*.9&& !analogPressed1){
-        analogPressed1 = true;
-      }
-      if(analogValue1>=analogCalib1*.9 && analogPressed1){
-        analogPressed1 = false;
-      }
-      if(analogValue2<analogCalib2*.9&& !analogPressed2){
-        analogPressed2 = true;
-      }
-      if(analogValue2>=analogCalib2*.9&&analogPressed2){
-        analogPressed2 = false;
-      }
   if (analogPressed1==true){
     for (int i = 0; i < 7; i++) {
       if (curr_x >= ox[i] && curr_x <= ox[i] + 30 && curr_y >= oy[i] && curr_y <= oy[i] + 30) {
