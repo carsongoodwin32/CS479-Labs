@@ -21,6 +21,9 @@ void DrawInterface() {
   float x_t = (width - titleWidth) / 2;
   text(title, x_t, 50); // Draw the centered text
   
+  
+  
+  
   //------------------------------------------------------------------------ First container ----------------------------------
   fill(255); // Change the color for the first container
   rect(10, 100, 1401-20, 300); // Draw a big rectangle for the first container
