@@ -4,7 +4,7 @@ import java.util.ArrayList;
 Serial myPort;  // Create a Serial object
 
 float accelerationX, accelerationY, analogValue1, analogValue2;
-ArrayList<Float> accelXList, accelYList;
+ArrayList<Float> accelXList, accelYList, click1List, click2List;
 boolean calibrating = false;
 boolean doneCalibrating = false;
 boolean allSquaresInBoxes = false;
@@ -12,6 +12,8 @@ int countdown = 5;  // Initial countdown value
 int calibrationStartTime;  // Initialize calibrationStartTime
 float accel_x_avg = 0;
 float accel_y_avg = 0;
+float analogCalib1 = 0;
+float analogCalib2 = 0;
 int curr_x = 690;
 int curr_y = 440;
 
@@ -41,8 +43,8 @@ void drawSquareOnScreen() {
   rect(curr_x, curr_y, 20, 20); // Create a red square at curr_x and curr_y
   float diff_x = accelerationX - accel_x_avg; // Calculate the difference between accelerationX and accel_x_avg
   float diff_y = accelerationY - accel_y_avg; // Calculate the difference between accelerationX and accel_x_avg
-  int temp_x = curr_x + int(diff_x); // Add the difference to curr_x
-  int temp_y = curr_y - int(diff_y); // Add accelerationY to curr_y
+  int temp_x = curr_x - int(diff_x); // Add the difference to curr_x
+  int temp_y = curr_y + int(diff_y); // Add accelerationY to curr_y
     if(curr_x<0){
     curr_x = 0;
   }
@@ -134,14 +136,24 @@ void draw() {
       // Calculate the average of the acceleration values
       float sumX = 0;
       float sumY = 0;
+      float sum1 = 0;
+      float sum2 = 0;
       for (Float value : accelXList) {
         sumX += value;
       }
       for (Float value : accelYList) {
         sumY += value;
       }
+      for (Float value : click1List) {
+        sum1 += value;
+      }
+      for (Float value : click2List) {
+        sum2 += value;
+      }
       accel_x_avg = sumX / accelXList.size();
       accel_y_avg = sumY / accelYList.size();
+      analogCalib1 = sum1 / click1List.size();
+      analogCalib2 = sum2 / click2List.size();
       doneCalibrating = true;
     }
     else{
@@ -196,18 +208,20 @@ void serialEvent(Serial port) {
       if (calibrating) {
         accelXList.add(accelerationX);
         accelYList.add(accelerationY);
-        println("Added acceleration values: X=" + accelerationX + ", Y=" + accelerationY);
+        click1List.add(analogValue1);
+        click2List.add(analogValue2);
+        //println("Added acceleration values: X=" + accelerationX + ", Y=" + accelerationY);
       }
-      if(analogValue1>1000&& !analogPressed1){
+      if(analogValue1<analogCalib1*.9&& !analogPressed1){
         analogPressed1 = true;
       }
-      if(analogValue1<500 && analogPressed1){
+      if(analogValue1>=analogCalib1*.9 && analogPressed1){
         analogPressed1 = false;
       }
-      if(analogValue2>1000&& !analogPressed2){
+      if(analogValue2<analogCalib2*.9&& !analogPressed2){
         analogPressed2 = true;
       }
-      if(analogValue2<500&&analogPressed2){
+      if(analogValue2>=analogCalib2*.9&&analogPressed2){
         analogPressed2 = false;
       }
     }
