@@ -37,6 +37,8 @@ void setup() {
   analogValue2 = 0.0;
   accelXList = new ArrayList<Float>();
   accelYList = new ArrayList<Float>();
+  click1List = new ArrayList<Float>();
+  click2List = new ArrayList<Float>();
 }
 void drawSquareOnScreen() {
   fill(100, 100, 200); // Set the fill color to red
@@ -212,7 +214,9 @@ void serialEvent(Serial port) {
         click2List.add(analogValue2);
         //println("Added acceleration values: X=" + accelerationX + ", Y=" + accelerationY);
       }
-      if(analogValue1<analogCalib1*.9&& !analogPressed1){
+    }
+  }
+       if(analogValue1<analogCalib1*.9&& !analogPressed1){
         analogPressed1 = true;
       }
       if(analogValue1>=analogCalib1*.9 && analogPressed1){
@@ -224,8 +228,6 @@ void serialEvent(Serial port) {
       if(analogValue2>=analogCalib2*.9&&analogPressed2){
         analogPressed2 = false;
       }
-    }
-  }
   if (analogPressed1==true){
     for (int i = 0; i < 7; i++) {
       if (curr_x >= ox[i] && curr_x <= ox[i] + 30 && curr_y >= oy[i] && curr_y <= oy[i] + 30) {
