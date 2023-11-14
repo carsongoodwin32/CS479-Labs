@@ -26,7 +26,7 @@ float winTime = 0;
 void setup() {
   size(1400, 900);  // Set the screen size
 
-  myPort = new Serial(this, Serial.list()[1], 115200);
+  myPort = new Serial(this, Serial.list()[0], 115200);
   myPort.bufferUntil('\n'); // Set a newline character as the delimiter
 
 
