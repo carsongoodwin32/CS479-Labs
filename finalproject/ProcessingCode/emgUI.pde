@@ -12,8 +12,8 @@ float calibrationProgress = 0;
 
 void setup() {
   size(800, 600);
-  //println(Serial.list());
-  myPort = new Serial(this, "/dev/ttys001", 9600);
+  println(Serial.list());
+  myPort = new Serial(this, Serial.list()[0], 9600);
   myPort.bufferUntil('\n');
   
   cp5 = new ControlP5(this);
