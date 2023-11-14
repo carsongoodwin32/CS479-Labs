@@ -63,7 +63,7 @@ void loop()
 
 
 if (emg1 > 700){
-  servo1.write(130); // ang1 값에 따라 서보모터 이동
+ servo1.write(130); // ang1 값에 따라 서보모터 이동
  servo2.write(130);
  servo3.write(175);
  servo4.write(150);
