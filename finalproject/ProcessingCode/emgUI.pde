@@ -9,11 +9,12 @@ int[] emgValues = new int[graphWidth];
 int maxValue = 1023; // Max value of EMG sensor
 boolean isCalibrating = false;
 float calibrationProgress = 0;
+float gripStrength = 0; // Variable to represent grip strength
 
 void setup() {
   size(800, 600);
   println(Serial.list());
-  myPort = new Serial(this, Serial.list()[0], 9600);
+  myPort = new Serial(this, Serial.list()[0], 115200);
   myPort.bufferUntil('\n');
   
   cp5 = new ControlP5(this);
@@ -31,32 +32,49 @@ void setup() {
 }
 
 void draw() {
-  background(255);
-  stroke(50);
-  noFill();
+    background(255);
+    drawUIElements();  // Function to draw additional UI elements
+    drawEMGGraph();    // Function to draw the EMG graph
+    updateProstheticArmRepresentation();  // Function to update the prosthetic arm
+}
 
-  for (int i = 0; i < graphWidth - 1; i++) {
-    emgValues[i] = emgValues[i + 1];
-  }
-
-  emgValues[graphWidth - 1] = (int)(emgValue);
-
-  beginShape();
-  for (int i = 0; i < graphWidth; i++) {
-    vertex(i, map(emgValues[i], 0, maxValue, height, 0));
-  }
-  endShape();
-
-  if (isCalibrating) {
+void drawUIElements() {
+    // Status indicators, labels, and other UI components
     fill(0);
-    text("Calibrating...", 50, 530);
-    noFill();
-    rect(50, 510, 100, 10);
+    text("EMG Sensor Status: " + (myPort.active() ? "Connected" : "Disconnected"), 10, 20);
+    text("Prosthetic Arm Control", 400, 20);
+    text("EMG Graph", 10, 220);
+    
+    // Grip strength visual feedback
     fill(100, 100, 250);
-    rect(50, 510, calibrationProgress, 10);
-  }
-  
-  updateProstheticArmRepresentation();
+    rect(400, 550, gripStrength, 20);
+    fill(0);
+    text("Grip Strength: " + int(gripStrength), 400, 540);
+
+    // Calibration status
+    if (isCalibrating) {
+        fill(0);
+        text("Calibrating...", 50, 530);
+        noFill();
+        rect(50, 510, 100, 10);
+        fill(100, 100, 250);
+        rect(50, 510, calibrationProgress, 10);
+    }
+}
+
+void drawEMGGraph() {
+    stroke(50);
+    fill(100, 100, 250);  // Color for the bars
+
+    int barWidth = graphWidth / emgValues.length;  // Calculate the width of each bar
+
+    for (int i = 0; i < graphWidth; i++) {
+        // Map the EMG value to the height of the bar
+        int barHeight = int(map(emgValues[i], 0, maxValue, 0, height / 2));
+
+        // Draw the bar
+        rect(i * barWidth, height - barHeight, barWidth, barHeight);
+    }
 }
 
 void updateProstheticArmRepresentation() {
@@ -64,33 +82,53 @@ void updateProstheticArmRepresentation() {
     map(emgValues[graphWidth - 1], 0, maxValue, 0, PI), 
     map(emgValues[graphWidth - 1], 0, maxValue, 0, PI/2)
   };
-  drawProstheticArm(400, 300, angles);
+  drawProstheticArm(400, 300, angles, gripStrength);
 }
 
-void drawProstheticArm(float x, float y, float[] angles) {
+void drawProstheticArm(float x, float y, float[] angles, float grip) {
   pushMatrix();
   translate(x, y);
-  fill(50);
-  rect(-10, -150, 20, 150);
 
+  // Upper arm
+  fill(150, 0, 0); // Red color
+  pushMatrix();
   rotate(angles[0]);
-  rect(0, 0, 20, 100);
+  rect(-10, 100, 50, -100);
+  popMatrix();
 
+  // Forearm
+  fill(0, 150, 0); // Green color
+  pushMatrix();
   translate(0, 100);
   rotate(angles[1]);
-  rect(0, 0, 15, 80);
-  
+  rect(-7.5, 0, 20, 80);
+  popMatrix();
+
+  // Grip
+  translate(0, 180); // Position for the grip
+  drawGrip(grip);
+
   popMatrix();
 }
 
-void serialEvent(Serial myPort) {
-  String inString = myPort.readStringUntil('\n');
-  if (inString != null) {
-    inString = trim(inString);
-    emgValue = int(inString);
-  }
+void drawGrip(float grip) {
+  fill(0, 0, 150); // Blue color for grip
+  float gripWidth = map(grip, 0, 100, 20, 10); 
+  rect(-gripWidth / 2, 0, gripWidth, 30);
 }
 
+void serialEvent(Serial myPort) {
+    String inString = myPort.readStringUntil('\n');
+    if (inString != null) {
+        inString = trim(inString);
+        println("Received: " + inString); // Debugging line
+        try {
+            emgValue = int(inString);  // Convert the received string to an integer
+        } catch (Exception e) {
+            println("Error parsing EMG data: " + inString);
+        }
+    }
+}
 public void calibrate() {
   isCalibrating = true;
   new Thread(new Runnable() { 
