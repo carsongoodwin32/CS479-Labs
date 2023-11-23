@@ -3,7 +3,17 @@ PImage EMG;
 PImage data; 
 boolean eegdata = false; 
 boolean emgdata = false; 
+PImage maxtrength;
+PImage baseline; 
 
+boolean BaselineB = false; 
+boolean MaxM=false;
+
+float startTime_MaxM = 0; 
+float remainingTime_MaxM = 0;
+
+float startTime_Baseline =0; 
+float remainingTime_Baseline = 0;
 
 void DrawInterface() {
   fill(255);
@@ -16,6 +26,8 @@ void DrawInterface() {
   // Calculate the x-coordinate for the text to center it horizontally
   float x_t = (width - titleWidth) / 2;
   text(title, x_t, 50); // Draw the centered text
+  
+  line((width - titleWidth) / 2-100, 60,x_t+titleWidth + 100 ,60);
   //------------------------------------------------------------------------- END  Heading --------------------------------------
   
   EEG = loadImage("EEG.png");
@@ -24,7 +36,36 @@ void DrawInterface() {
   EMG = loadImage("EMG.png");
   image(EMG,200,600,250,250); 
   
- 
+  baseline = loadImage("balance.png");
+  maxtrength = loadImage("arrow.png");
+  
+  fill(255);
+  rect(18,19,115,52);
+  image(baseline,80,20,50,50); 
+  if (BaselineB){
+      remainingTime_Baseline= (20000 - (millis() - startTime_Baseline))*0.001;
+      text(remainingTime_Baseline, 100, 100); // Draw the centered number
+  
+      if(remainingTime_Baseline<0){
+        BaselineB = false;
+        remainingTime_Baseline=0;
+        println("STOP BASELINE BECAUSE OF TIME");
+      }
+  }
+
+  
+  image(maxtrength,20,20,50,50); 
+  if (MaxM){
+      remainingTime_MaxM= (20000 - (millis() - startTime_MaxM))*0.001;
+      text(remainingTime_MaxM, 100, 100); // Draw the centered number
+  
+      if(remainingTime_MaxM<0){
+        MaxM = false;
+        println("STOP MAXM  BECAUSE OF TIME");
+        remainingTime_MaxM=0;
+      }
+  }
+
   // ------------------------------------------------------------------------ Channels -------------------------------------------
   stroke(0);
   int length = 450;
@@ -87,7 +128,6 @@ void DrawInterface() {
 void mousePressed() {
   float otherLittleSquareSize = 250; // Size of the other little squares
   
-  
   // Check if the mouse click is inside the bounds of the first icon
   if (mouseX >= 200 && mouseX <= 200 + otherLittleSquareSize && mouseY >= 200 && mouseY <= 200 + otherLittleSquareSize) {
     println("Clicked on balance icon.");
@@ -110,4 +150,44 @@ void mousePressed() {
       emgdata=false;
     }
   }
+  
+  if (mouseX >= 80 && mouseX <= 80 + 50 && mouseY >= 20 && mouseY <= 20 + 50) {
+    println("Baseline Recording.");
+    if(!BaselineB){
+      BaselineB = true;
+      flagb = 0;
+      Avgbaseline = 0;
+      baselinevector =new ArrayList<>();
+      startTime_Baseline = millis();
+    } 
+    else if(BaselineB){
+      BaselineB=false;
+    }
+  }
+  
+  // Check if the mouse click is inside the bounds of the second icon
+  if (mouseX >= 20 && mouseX <=20 + 50 && mouseY >= 20 && mouseY <= 20 + 50) {
+     println("Max Strenght Recording.");
+     if(!MaxM){
+         MaxM = true;
+         flagm = 0;
+         AvgMaxStrenght = 0;
+         maxstrenghtnevector =new ArrayList<>();
+         startTime_MaxM= millis();
+     } 
+     else if(MaxM){
+             MaxM=false;
+     }
+   }
+   if ( firstThresholdEMG!=0 && secondThresholdEMG!=0){
+       if (value<firstThresholdEMG){
+         println("No action");
+       }
+       else if (value>firstThresholdEMG && value < secondThresholdEMG){
+         println("Moderate action");
+       }
+       else if (value > secondThresholdEMG){
+         println("Powerfull action");
+      }
+   }
 }

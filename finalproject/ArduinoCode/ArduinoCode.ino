@@ -9,11 +9,5 @@ void loop() {
   // Send the sensor value and voltage over serial
   //Serial.print("Sensor Value: ");
   Serial.println(sensorValue);
-  
-  //Serial.print("Voltage: ");
-  //Serial.print(millivolt);
-  //Serial.println(" mV");
-  
-  Serial.println(); // Print a new line for readability
   delay(10); // Delay for 10 milliseconds (adjust as needed)
 }
