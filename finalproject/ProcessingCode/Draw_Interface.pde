@@ -40,32 +40,45 @@ void DrawInterface() {
   maxtrength = loadImage("arrow.png");
   
   fill(255);
-  rect(18,19,115,52);
-  image(baseline,80,20,50,50); 
+  rect(1100,80,350,220);
+  image(baseline,1110,100,80,80); 
   if (BaselineB){
+      stroke(0);
+      fill(0);
       remainingTime_Baseline= (20000 - (millis() - startTime_Baseline))*0.001;
-      text(remainingTime_Baseline, 100, 100); // Draw the centered number
+      text(remainingTime_Baseline, 1310, 150); // Draw the centered number
   
       if(remainingTime_Baseline<0){
-        BaselineB = false;
-        remainingTime_Baseline=0;
-        println("STOP BASELINE BECAUSE OF TIME");
+            BaselineB = false;
+            remainingTime_Baseline=0;
+            println("STOP BASELINE BECAUSE OF TIME");
       }
   }
-
   
-  image(maxtrength,20,20,50,50); 
+  
+  image(maxtrength,1110,200,80,80); 
   if (MaxM){
       remainingTime_MaxM= (20000 - (millis() - startTime_MaxM))*0.001;
-      text(remainingTime_MaxM, 100, 100); // Draw the centered number
+      stroke(0);
+      fill(0);
+      text(remainingTime_MaxM, 1310, 250); // Draw the centered number
   
       if(remainingTime_MaxM<0){
-        MaxM = false;
-        println("STOP MAXM  BECAUSE OF TIME");
-        remainingTime_MaxM=0;
+            MaxM = false;
+            remainingTime_MaxM=0;
+            println("STOP MAXM  BECAUSE OF TIME");
       }
   }
+  
 
+ if (threshold){
+ 
+      stroke(0);
+      fill(0);
+      text( firstThresholdEMG,  1210, 150);
+      text( secondThresholdEMG, 1210, 250);
+      }
+  
   // ------------------------------------------------------------------------ Channels -------------------------------------------
   stroke(0);
   int length = 450;
@@ -151,7 +164,7 @@ void mousePressed() {
     }
   }
   
-  if (mouseX >= 80 && mouseX <= 80 + 50 && mouseY >= 20 && mouseY <= 20 + 50) {
+  if (mouseX >= 1100 && mouseX <= 1100 + 80 && mouseY >= 100 && mouseY <= 100+80) {
     println("Baseline Recording.");
     if(!BaselineB){
       BaselineB = true;
@@ -166,7 +179,7 @@ void mousePressed() {
   }
   
   // Check if the mouse click is inside the bounds of the second icon
-  if (mouseX >= 20 && mouseX <=20 + 50 && mouseY >= 20 && mouseY <= 20 + 50) {
+  if (mouseX >= 1100 && mouseX <=1100 + 80 && mouseY >= 200 && mouseY <= 200+80) {
      println("Max Strenght Recording.");
      if(!MaxM){
          MaxM = true;
@@ -179,7 +192,7 @@ void mousePressed() {
              MaxM=false;
      }
    }
-   if ( firstThresholdEMG!=0 && secondThresholdEMG!=0){
+   if (threshold){
        if (value<firstThresholdEMG){
          println("No action");
        }

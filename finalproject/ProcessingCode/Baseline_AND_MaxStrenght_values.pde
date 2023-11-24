@@ -8,6 +8,8 @@ ArrayList<Integer> maxstrenghtnevector = new ArrayList<>();
 float firstThresholdEMG;
 float secondThresholdEMG;
 
+boolean threshold = false; 
+
 void averageForBaseline(){
     println("BASELINE");
     if (!baselinevector.isEmpty()) {
@@ -36,8 +38,8 @@ void ThresholdCalculator (){
         float  range = AvgMaxStrenght - Avgbaseline;
         
         firstThresholdEMG = Avgbaseline + (range * 0.3);
-        secondThresholdEMG = Avgbaseline +(range * 0.8);
+        secondThresholdEMG = Avgbaseline +(range * 0.9);
         
-        println("Threshold has been calculated");
+        threshold = true;
         
 }
