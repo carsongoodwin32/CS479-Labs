@@ -12,8 +12,8 @@ int flagb = 0;
 int flagm = 0; 
 void setup() {
   size(1500, 900);
-  myPort = new Serial(this, Serial.list()[0], 115200);
-  myPort.bufferUntil('\n');
+  //myPort = new Serial(this, Serial.list()[0], 115200);
+  //myPort.bufferUntil('\n');
 
   graph_setup();
 }
