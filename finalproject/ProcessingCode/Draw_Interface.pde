@@ -192,17 +192,4 @@ void mousePressed() {
              MaxM=false;
      }
    }
-   if (threshold){
-       if (value<firstThresholdEMG){
-         println("No action");
-         power = false; 
-       //}
-       //else if (value>firstThresholdEMG && value < secondThresholdEMG){
-       //  println("Moderate action");
-       }
-       else if (value > secondThresholdEMG){
-         println("Powerfull action");
-         power = true;
-      }
-   }
 }

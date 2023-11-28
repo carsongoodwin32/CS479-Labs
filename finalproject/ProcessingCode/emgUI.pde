@@ -3,7 +3,7 @@ import processing.serial.*;
 boolean high = false; 
 boolean low = false; 
 int value;
-
+String lastAction = "";  // Initialize a state variable
 
 
 
@@ -56,18 +56,20 @@ void serialEvent(Serial myPort) {
        if (Avgbaseline != 0 && AvgMaxStrenght != 0){
             ThresholdCalculator ();
        } 
-       if (threshold){
-       if (value<firstThresholdEMG){
-         println("No action");
-       }
-       else if (value>firstThresholdEMG && value < secondThresholdEMG){
-         println("Moderate action");
-       }
-       else if (value > secondThresholdEMG){
-         println("Powerfull action");
-      }
-   }
-         
-         
+        
+        if (threshold){
+            if (value < firstThresholdEMG && !lastAction.equals("No action")){
+                println("No action");
+                myPort.write("0");
+                lastAction = "No action";
+            }
+            else if (value > secondThresholdEMG && !lastAction.equals("Powerful action")){
+                println("Powerful action");
+                power = true;
+                myPort.write("1");
+                lastAction = "Powerful action";
+            }
+        }
+      }     
     }
 }
