@@ -29,23 +29,25 @@ void setup() {
 void loop() {
   int sensorValue = analogRead(A0); // Read the analog value from pin A0
   float millivolt = (sensorValue / 1023.0) * 5.0 * 1000; // Convert to millivolts
-  if (Serial.available()) 
+  if (Serial.available() > 0) 
    { // If data is available to read,
      val = Serial.read(); // read it and store it in val
      Serial.println(val);
    }
    if (val == "49") 
    { // If 1 was received flex arm
-   Serial.print('got here');
-   digitalWrite(in1Elbow, HIGH);
-	 digitalWrite(in2Elbow, LOW);
-	 analogWrite(enElbow, 200);
+     digitalWrite(in1Elbow, LOW);
+	 digitalWrite(in2Elbow, HIGH);
+	 analogWrite(enElbow, 255);
 	 delay(500);
-	 analogWrite(enElbow, 50);
-   } else if(val == "0"){ // Else put the arm down
-     Serial.print('got here');
-     analogWrite(enElbow, 0);
+	 analogWrite(enElbow, 0);
+   } else if(val == "48"){ // Else put the arm down
+      Serial.println("got here");
+      digitalWrite(in1Elbow, HIGH);
+	 digitalWrite(in2Elbow, LOW);
+     analogWrite(enElbow, 100);
 	 delay(500); 
+   analogWrite(enElbow, 0);
    }
   // Send the sensor value and voltage over serial
   //Serial.print("Sensor Value: ");
