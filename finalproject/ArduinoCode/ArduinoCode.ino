@@ -29,6 +29,9 @@ void setup() {
 void loop() {
   int sensorValue = analogRead(A0); // Read the analog value from pin A0
   float millivolt = (sensorValue / 1023.0) * 5.0 * 1000; // Convert to millivolts
+  // Send the sensor value and voltage over serial
+  // Serial.print("Sensor Value: ");
+  Serial.println(sensorValue);
   if (Serial.available() > 0) 
    { // If data is available to read,
      val = Serial.read(); // read it and store it in val
@@ -49,9 +52,7 @@ void loop() {
 	 delay(500); 
    analogWrite(enElbow, 0);
    }
-  // Send the sensor value and voltage over serial
-  //Serial.print("Sensor Value: ");
-  // Serial.println(sensorValue);
+  
   int newHandPosition = digitalRead(9);
 //   Serial.println(newHandPosition);
   if(newHandPosition > handPosition && handPosition == 0){
