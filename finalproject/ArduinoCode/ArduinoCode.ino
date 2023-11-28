@@ -7,7 +7,7 @@ int enHand = 6;
 int in3Hand = 7;
 int in4Hand = 8;
 int handPosition = 0;
-
+String val;
 void setup() {
   Serial.begin(115200); // Start the serial communication at 115200 baud rate
   	// Set all the motor control pins to outputs
@@ -29,12 +29,26 @@ void setup() {
 void loop() {
   int sensorValue = analogRead(A0); // Read the analog value from pin A0
   float millivolt = (sensorValue / 1023.0) * 5.0 * 1000; // Convert to millivolts
-
+  if (Serial.available()) 
+   { // If data is available to read,
+     val = Serial.read(); // read it and store it in val
+   }
+   if (val == '1') 
+   { // If 1 was received flex arm
+     digitalWrite(in1Elbow, HIGH);
+	 digitalWrite(in2Elbow, LOW);
+	 analogWrite(enElbow, 200);
+	 delay(500);
+	 analogWrite(enElbow, 50);
+   } else if(val == '0'){ // Else put the arm down
+     analogWrite(enElbow, 0);
+	 delay(500); 
+   }
   // Send the sensor value and voltage over serial
   //Serial.print("Sensor Value: ");
   // Serial.println(sensorValue);
   int newHandPosition = digitalRead(9);
-  Serial.println(newHandPosition);
+//   Serial.println(newHandPosition);
   if(newHandPosition > handPosition && handPosition == 0){
     //close hand
 	digitalWrite(in3Hand, HIGH);
