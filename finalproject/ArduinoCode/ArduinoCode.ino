@@ -32,15 +32,18 @@ void loop() {
   if (Serial.available()) 
    { // If data is available to read,
      val = Serial.read(); // read it and store it in val
+     Serial.println(val);
    }
-   if (val == '1') 
+   if (val == "49") 
    { // If 1 was received flex arm
-     digitalWrite(in1Elbow, HIGH);
+   Serial.print('got here');
+   digitalWrite(in1Elbow, HIGH);
 	 digitalWrite(in2Elbow, LOW);
 	 analogWrite(enElbow, 200);
 	 delay(500);
 	 analogWrite(enElbow, 50);
-   } else if(val == '0'){ // Else put the arm down
+   } else if(val == "0"){ // Else put the arm down
+     Serial.print('got here');
      analogWrite(enElbow, 0);
 	 delay(500); 
    }
