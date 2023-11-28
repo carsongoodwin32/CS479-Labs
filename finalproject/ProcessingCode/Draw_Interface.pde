@@ -8,7 +8,7 @@ PImage baseline;
 
 boolean BaselineB = false; 
 boolean MaxM=false;
-
+boolean power = false;
 float startTime_MaxM = 0; 
 float remainingTime_MaxM = 0;
 
@@ -195,12 +195,14 @@ void mousePressed() {
    if (threshold){
        if (value<firstThresholdEMG){
          println("No action");
-       }
-       else if (value>firstThresholdEMG && value < secondThresholdEMG){
-         println("Moderate action");
+         power = false; 
+       //}
+       //else if (value>firstThresholdEMG && value < secondThresholdEMG){
+       //  println("Moderate action");
        }
        else if (value > secondThresholdEMG){
          println("Powerfull action");
+         power = true;
       }
    }
 }

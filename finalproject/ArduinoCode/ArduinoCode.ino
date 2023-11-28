@@ -17,6 +17,7 @@ void setup() {
 	pinMode(in2Elbow, OUTPUT);
 	pinMode(in3Hand, OUTPUT);
 	pinMode(in4Hand, OUTPUT);
+  pinMode(9, INPUT);
 	
 	// Turn off motors - Initial state
 	digitalWrite(in1Elbow, LOW);
@@ -31,21 +32,25 @@ void loop() {
 
   // Send the sensor value and voltage over serial
   //Serial.print("Sensor Value: ");
-  Serial.println(sensorValue);
-  int newHandPosition = analogRead(A2);
-  // printf(newHandPosition);
-  if(handPosition < newHandPosition){
+  // Serial.println(sensorValue);
+  int newHandPosition = digitalRead(9);
+  Serial.println(newHandPosition);
+  if(newHandPosition > handPosition && handPosition == 0){
+    //close hand
 	digitalWrite(in3Hand, HIGH);
 	digitalWrite(in4Hand, LOW);
 	analogWrite(enHand, 255);
 	delay(850);
 	analogWrite(enHand, 0);
-  }else if(handPosition > newHandPosition){
-	digitalWrite(in3Hand, LOW);
+  handPosition = 1;
+  }else if(newHandPosition < handPosition && handPosition == 1){
+    //open hand
+  digitalWrite(in3Hand, LOW);
 	digitalWrite(in4Hand, HIGH);
 	analogWrite(enHand, 255);
 	delay(850);
 	analogWrite(enHand, 0);
+  handPosition = 0;
   }
   handPosition = newHandPosition;
   delay(10); // Delay for 10 milliseconds (adjust as needed)

@@ -38,7 +38,7 @@ void ThresholdCalculator (){
         float  range = AvgMaxStrenght - Avgbaseline;
         
         firstThresholdEMG = Avgbaseline + (range * 0.3);
-        secondThresholdEMG = Avgbaseline +(range * 0.9);
+        secondThresholdEMG = Avgbaseline +(range * 0.6);
         
         threshold = true;
         
