@@ -19,7 +19,7 @@ This repository contains the lab assignments and final project for the CS479 cou
   - **ProcessingCode/**: Processing scripts for the lab.
   - **slides/**: Presentation slides for the lab.
   - **video/**: Videos related to the lab.
-- **finalproject/**: Final project files.
+- **finalproject/**: Final project files. - LEGO HARM CONTROLLED BY EEG AND EMG 
   - **3dmodels/**: 3D models used in the final project.
   - **ArduinoCode/**: Arduino code for the final project.
   - **ProcessingCode/**: Processing code and scripts.
